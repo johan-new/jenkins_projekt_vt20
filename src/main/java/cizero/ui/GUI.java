@@ -1,6 +1,10 @@
+package cizero.ui;
+
+import cizero.domain.*;
+
 import javax.swing.*;
 import java.awt.*;
-import java.utils.*;
+import java.util.*;
 
 public class GUI extends JFrame {
 
@@ -24,7 +28,7 @@ public class GUI extends JFrame {
 
     setVisible(true);
     setSize(500,300);
-    setDefaultCloseOperation(EXIT_ON_CLOSE;
+    setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 
   }
