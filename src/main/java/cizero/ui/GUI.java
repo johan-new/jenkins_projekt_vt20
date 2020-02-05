@@ -10,21 +10,27 @@ public class GUI extends JFrame {
 
   private ContactBook contacts;
   private JTextArea textArea = new JTextArea();
-  private JLabel bigLabel = new JLabel();
-  private JTextField fNameField = new JTextField();
-  private JTextField lNameField = new JTextField();
-  private JTextField phoneField = new JTextField();
-  private JTextField mailField = new JTextField();
+  private JPanel bigPanel = new JPanel();
+  private JTextField fNameField = new JTextField("", 15);
+  private JTextField lNameField = new JTextField("", 15);
+  private JTextField phoneField = new JTextField("", 15);
+  private JTextField mailField = new JTextField("", 15);
   private JLabel fNameLabel = new JLabel("Förnamn");
-  private JLabel eNameLabel = new JLabel("Efternamn");
+  private JLabel lNameLabel = new JLabel("Efternamn");
   private JLabel phoneLabel = new JLabel("telenummer");
   private JLabel mailLabel = new JLabel("mail");
 
 
   public GUI(){
 
-    add(bigLabel);
+    setLayout(new GridLayout(1,2));
+
+    add(bigPanel);
     add(textArea);
+    bigPanel.add(fNameField);
+    bigPanel.add(lNameField);
+    bigPanel.add(phoneField);
+    bigPanel.add(mailField);
 
     setVisible(true);
     setSize(500,300);
