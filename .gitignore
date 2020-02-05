@@ -10,3 +10,4 @@ MANIFEST.MF
 *.iml
 *.jar
 bin
+testMain.java
