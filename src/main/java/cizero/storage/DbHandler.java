@@ -24,7 +24,7 @@ public class DbHandler {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 	        c = DriverManager.getConnection("jdbc:mysql://" + dbURL);
 	        //Statement s = c.createStatement();
-	        //s.execute("CREATE TABLE IF NOT EXISTS contactbook (fldFName VARCHAR(30), fldLName VARCHAR(30), fldTNr INT, fldEmail VARCHAR(20)");
+	        //s.execute("CREATE TABLE IF NOT EXISTS contactbook (fldFName VARCHAR(30), fldLName VARCHAR(30), fldTNr VARCHAR(20), fldEmail VARCHAR(20)");
 	        //CREATE DATABASE x
 	        // USE DATABASE x
 	        //ALTER TABLE contactbook ADD PRIMARY KEY(fldFname,fldLName,fldTnr,fldEmail);
@@ -54,9 +54,9 @@ public class DbHandler {
 		}
 	}
 
-	public ArrayList<Contact> readDb(){
-
-	}
+	// public ArrayList<Contact> readDb(){
+	// 	s.executeQuery("SELECT * FROM")
+	// }
 	
 
 }
