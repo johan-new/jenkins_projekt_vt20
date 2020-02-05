@@ -1,4 +1,4 @@
-package storage;
+package cizero.storage;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -54,9 +54,15 @@ public class DbHandler {
 		}
 	}
 
-	// public ArrayList<Contact> readDb(){
-	// 	s.executeQuery("SELECT * FROM")
-	// }
+	 public ArrayList<Contact> readDb(){
+		ResultSet resultSet;
+		 resultSet = s.executeQuery("SELECT * FROM tblContactbook");
+		 
+		 while (resultSet.next()){
+			 System.out.println(resultSet.getString("fldFName") + resultSet.getString("fldLName")
+			 					+ resultSet.getString("fldTNr") + resultSet.getString("fldEmail") + "\n");
+		 }
+	}
 	
 
 }
