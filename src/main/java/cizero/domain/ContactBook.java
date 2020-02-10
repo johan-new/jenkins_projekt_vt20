@@ -12,11 +12,37 @@ public class ContactBook {
 		db = DbHandler.getInstance();
 	}
 	
-	public void addContact(String fName, String lName, String teleNr, String email) {
-		contacts.add(new Contact(fName, lName, teleNr, email));
+	public List<Contact> getContacts(){
+		return contacts;
 	}
 	
-	public void update() {
-		
+	public List<Contact> readContactsFromDB() {
+		contacts = db.readDb();
+		return contacts;
 	}
+	
+	public boolean addContact(Contact contact) {
+		contacts.add(contact);
+		return db.addContact(contact);
+	}
+	
+	public boolean addContact(ArrayList<Contact> contacts) {
+		for(Contact contact : contacts) {
+			this.contacts.add(contact);
+		}
+		return db.addContact(contacts);
+	}
+	
+	public boolean removeContact(Contact contact) {
+		contacts.remove(contact);
+		return db.removeContact(contact);
+	}
+	
+	public boolean removeContact(ArrayList<Contact> contacts) {
+		for(Contact contact : contacts) {
+			this.contacts.remove(contact);
+		}
+		return db.removeContact(contacts);
+	}
+	
 }
