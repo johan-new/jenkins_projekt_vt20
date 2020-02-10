@@ -10,8 +10,9 @@ public class GUI extends JFrame {
 
   private ContactBook contactBook;
   private ArrayList<Contact> tempContacts;
-  //private JTextArea textArea = new JTextArea();
-//  private JPanel bigPanel = new JPanel();
+
+  private ArrayList<Contact> contactBookTest = new ArrayList<>();
+
   private JTextField fNameField = new JTextField(10);
   private JTextField lNameField = new JTextField(10);
   private JTextField phoneField = new JTextField(10);
@@ -21,7 +22,6 @@ public class GUI extends JFrame {
   private JLabel phoneLabel = new JLabel("telenummer");
   private JLabel mailLabel = new JLabel("mail");
 
-//  private JPanel btnPanel = new JPanel();
   private JButton addBtn = new JButton("Ny kontakt");
   private JButton searchBtn = new JButton("Sök kontakt");
   private JButton removeBtn = new JButton("Radera kontakt");
@@ -33,8 +33,14 @@ public class GUI extends JFrame {
   private JPanel formPanel = new JPanel();
 
 
-
   public GUI(){
+
+     Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
+     Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
+     Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
+     contactBookTest.add(pontus);
+     contactBookTest.add(kalle);
+     contactBookTest.add(pontusPersson);
 
     setLayout(new BorderLayout());
 
@@ -44,36 +50,117 @@ public class GUI extends JFrame {
     add(textPanel, BorderLayout.CENTER);
     add(formPanel, BorderLayout.WEST);
 
+
     JMenuBar menuBar = new JMenuBar();
     JMenu fileMenu = new JMenu("File");
+    JMenuItem darkMode = new JMenuItem("Dark mode");
+    JMenuItem lightMode = new JMenuItem("Light mode");
+    fileMenu.add(darkMode);
+    fileMenu.add(lightMode);
     menuBar.add(fileMenu);
-
     setJMenuBar(menuBar);
-    setSize(600, 500);
 
+    darkMode.addActionListener(e -> {
+      darkMode();
+    });
+
+    searchBtn.addActionListener(e -> {
+      findContact(fNameField.getText());
+    });
+
+    lightMode.addActionListener(e -> {
+      defaultMode();
+    });
+
+
+    setSize(600, 400);
     setLayout();
-
     setVisible(true);
-
     setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+    //darkMode();
 
 
   }
+
+
+
 
 
   public void findContact(String firstName){
     tempContacts = new ArrayList<>();
-    for(Contact contact : contactBook){
+    for(Contact contact : contactBookTest){
       if (contact.getFirstName().equals(firstName)){
         tempContacts.add(contact);
       }
     }
+    String contactText = "";
+    for(Contact contact: tempContacts){
+      contactText += "==============================\n" + contact.getFirstName() + " " +
+      contact.getLastName() + "\nTelenr: " + contact.getTeleNr() + "\nMail: " + contact.getEmail() + "\n\n";
+    }
+    if(tempContacts.size() > 0){
+    textArea.setText(contactText);
+  }
+    else{
+      textArea.setText("Kontakten hittades inte");
+    }
   }
 
 
+  public void darkMode(){
+    textArea.setBackground(new Color(17,1,1));
+    textArea.setForeground(new Color(166, 225, 250));
+    formPanel.setBackground(new Color(80, 59, 49));
+    fNameLabel.setForeground(new Color(229, 83, 129));
+    lNameLabel.setForeground(new Color(229, 83, 129));
+    phoneLabel.setForeground(new Color(229, 83, 129));
+    mailLabel.setForeground(new Color(229, 83, 129));
+    addBtn.setBackground(new Color(17,1,1));
+    searchBtn.setBackground(new Color(17,1,1));
+    addBtn.setForeground(new Color(166, 225, 250));
+    searchBtn.setForeground(new Color(166, 225, 250));
+    fNameField.setBackground(new Color(17, 1, 1));
+    lNameField.setBackground(new Color(17, 1, 1));
+    phoneField.setBackground(new Color(17, 1, 1));
+    mailField.setBackground(new Color(17, 1, 1));
+    fNameField.setForeground(new Color(229, 83, 129));
+    lNameField.setForeground(new Color(229, 83, 129));
+    phoneField.setForeground(new Color(229, 83, 129));
+    mailField.setForeground(new Color(229, 83, 129));
+
+    textArea.setText("\n\n\n" +
+"                     ____              _             _  \n"  +
+"                    /  __ \\            | |            | |  \n"    +
+"                    | /  \\/___  _ __ | |_ __ ____| |_ ___ \n"+
+"                    | |    / _ \\| '_ \\| __/ _` |/ __| __/ __| \n"+
+"                    | \\__/\\ (_) | | | | || (_| | (__| |_\\__ \\ \n"+
+"                    \\____/\\___/ |_| |_|\\__\\__,_|\\___|\\__|");
+  };
 
 
+    public void defaultMode(){
+        textArea.setBackground(UIManager.getColor("TextArea.background"));
+        textArea.setForeground(UIManager.getColor("TextArea.foreground"));
+        formPanel.setBackground(UIManager.getColor("FormPanel.background"));
+        fNameLabel.setForeground(UIManager.getColor("Label.foreground"));
+        lNameLabel.setForeground(UIManager.getColor("Label.foreground"));
+        phoneLabel.setForeground(UIManager.getColor("Label.foreground"));
+        mailLabel.setForeground(UIManager.getColor("Label.foreground"));
+        addBtn.setBackground(UIManager.getColor("Button.background"));
+        searchBtn.setBackground(UIManager.getColor("Button.background"));
+        addBtn.setForeground(UIManager.getColor("Button.foreground"));
+        searchBtn.setForeground(UIManager.getColor("Button.foreground"));
+        fNameField.setBackground(UIManager.getColor("TextField.background"));
+        lNameField.setBackground(UIManager.getColor("TextField.background"));
+        phoneField.setBackground(UIManager.getColor("TextField.background"));
+        mailField.setBackground(UIManager.getColor("TextField.background"));
+        fNameField.setForeground(UIManager.getColor("TextField.foreground"));
+        lNameField.setForeground(UIManager.getColor("TextField.foreground"));
+        phoneField.setForeground(UIManager.getColor("TextField.foreground"));
+        mailField.setForeground(UIManager.getColor("TextField.foreground"));
 
+    }
   public void setLayout(){
 
         formPanel.setPreferredSize(new Dimension(250, 100));
