@@ -4,12 +4,22 @@ import java.sql.*;
 import java.util.ArrayList;
 import cizero.domain.*;
 
-/* DbHandler - Handles database connectivity and translates
- * input/output, classic CRUD
- * 
- * Singleton Pattern
- * add/remove Contact methods returns true if succeeded
- * */
+
+/**
+* <h1>DBHandler</h1>
+* DbHandler - Handles database connectivity and translates
+* input/output / CRUD
+* 
+* Uses Singelton pattern to avoid several connections.
+*
+* The add/remove methods return as boolean value
+* as an indicator if the query has succeeded.
+*
+* @author  Johan Nyberg
+* @version 1.0
+* @since   2019-02-05
+*/
+
 
 public class DbHandler {
 	
