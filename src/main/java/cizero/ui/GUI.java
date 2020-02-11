@@ -41,8 +41,8 @@ public class GUI extends JFrame {
 
   private JButton addBtn = new JButton("Ny kontakt");
   private JButton searchBtn = new JButton("Sök kontakt");
-  private JButton removeBtn = new JButton("Radera kontakt");
-  private JButton showBtn = new JButton("visa kontakter");
+  private JButton removeBtn = new JButton("Radera");
+  private JButton showBtn = new JButton("Visa alla");
 
   private JPanel textPanel = new JPanel();
   private JTextArea textArea = new JTextArea();
@@ -52,13 +52,13 @@ public class GUI extends JFrame {
 
   public GUI(){
 
-	   contactBook = new ContactBook();
-//     Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
-//     Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
-//     Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
-//     contactBook.addContact(pontus);
-//     contactBook.addContact(kalle);
-//     contactBook.addContact(pontusPersson);
+	  contactBook = new ContactBook();
+    // Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
+    // Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
+    // Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
+    // contacts.add(pontus);
+    // contacts.add(kalle);
+    // contacts.add(pontusPersson);
 	   contacts = contactBook.getContacts();
 
     setLayout(new BorderLayout());
@@ -96,6 +96,23 @@ public class GUI extends JFrame {
       clearForm();
     });
 
+    removeBtn.addActionListener(e -> {
+      contactBook.removeContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+      clearForm();
+    });
+
+    showBtn.addActionListener(e -> {
+      String contactText = "";
+      for(Contact contact: contacts){
+        contactText += "==============================\n" + contact.getFirstName() + " " +
+        contact.getLastName() + "\nTelenr: " + contact.getTeleNr() + "\nMail: " + contact.getEmail() + "\n\n";
+        textArea.setText(contactText);
+      }
+    });
+
+
+
+
 
     setSize(600, 400);
     setLayout();
@@ -108,7 +125,7 @@ public class GUI extends JFrame {
   }
 
   public void clearForm(){
-    fNameField.setText(""); lNameField.setText(""); phoneField.setText(); mailField.setText();
+    fNameField.setText(""); lNameField.setText(""); phoneField.setText(""); mailField.setText("");
   }
 
 
@@ -269,6 +286,21 @@ public class GUI extends JFrame {
         gc.anchor = GridBagConstraints.LINE_START;
         gc.insets = new Insets(0,0,0,0);
         formPanel.add(searchBtn, gc);
+
+        gc.gridy++;
+        gc.gridx = 0;
+
+        gc.weightx = 1;
+        gc.weighty = 0.1;
+
+        gc.anchor = GridBagConstraints.LINE_END;
+        gc.insets = new Insets(0,0,0,5);
+        formPanel.add(showBtn, gc);
+
+        gc.gridx = 1;
+        gc.anchor = GridBagConstraints.LINE_START;
+        gc.insets = new Insets(0,0,0,0);
+        formPanel.add(removeBtn, gc);
 
 
   }
