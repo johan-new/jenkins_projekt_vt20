@@ -10,6 +10,7 @@ public class ContactBook {
 	
 	public ContactBook() {
 		db = DbHandler.getInstance();
+		readContactsFromDB();
 	}
 	
 	public List<Contact> getContacts(){
