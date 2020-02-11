@@ -31,7 +31,4 @@ class TestContactBook {
 		assertFalse(cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@outlook.com")));
 	}
 	
-	@Test
-	void 
-	
 }

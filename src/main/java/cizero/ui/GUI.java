@@ -52,14 +52,14 @@ public class GUI extends JFrame {
 
   public GUI(){
 
-	  contactBook = new ContactBook();
-    // Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
-    // Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
-    // Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
-    // contacts.add(pontus);
-    // contacts.add(kalle);
-    // contacts.add(pontusPersson);
-	   contacts = contactBook.getContacts();
+	 contactBook = new ContactBook();
+//     Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
+//     Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
+//     Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
+//     contacts.add(pontus);
+//     contacts.add(kalle);
+//     contacts.add(pontusPersson);
+	 contacts = contactBook.getContacts();
 
     setLayout(new BorderLayout());
 
@@ -98,7 +98,8 @@ public class GUI extends JFrame {
     });
 
     removeBtn.addActionListener(e -> {
-      contactBook.removeContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+      boolean isRemoved = contactBook.removeContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+      System.out.println(isRemoved);
       clearForm();
     });
 
