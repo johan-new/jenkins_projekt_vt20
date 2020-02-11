@@ -29,7 +29,10 @@ public class GUI extends JFrame {
   private ContactBook contactBook;
   private ArrayList<Contact> tempContacts;
 
-  private List<Contact> contacts;
+  //private List<Contact> contacts;
+  private List<Contact> contacts = new ArrayList<>();
+
+
   private JTextField fNameField = new JTextField(10);
   private JTextField lNameField = new JTextField(10);
   private JTextField phoneField = new JTextField(10);
@@ -49,17 +52,33 @@ public class GUI extends JFrame {
 
   private JPanel formPanel = new JPanel();
 
+  JMenuBar menuBar;
+  JMenu fileMenu;
+  JMenuItem darkMode;
+  JMenuItem lightMode;
+  JMenuItem pinkMode;
+  JMenuItem avsluta;
+  JMenuItem clear;
+  JMenuItem randomMode;
+
+  Color background1;
+  Color background2;
+  Color foreground1;
+  Color foreground2;
+
 
   public GUI(){
 
-	  contactBook = new ContactBook();
-    // Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
-    // Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
-    // Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
-    // contacts.add(pontus);
-    // contacts.add(kalle);
-    // contacts.add(pontusPersson);
-	   contacts = contactBook.getContacts();
+	  //contactBook = new ContactBook();
+
+    Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
+    Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
+    Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
+    contacts.add(pontus);
+    contacts.add(kalle);
+    contacts.add(pontusPersson);
+
+    // contacts = contactBook.getContacts();
 
     setLayout(new BorderLayout());
 
@@ -70,14 +89,39 @@ public class GUI extends JFrame {
     add(formPanel, BorderLayout.WEST);
 
 
-    JMenuBar menuBar = new JMenuBar();
-    JMenu fileMenu = new JMenu("File");
-    JMenuItem darkMode = new JMenuItem("Dark mode");
-    JMenuItem lightMode = new JMenuItem("Light mode");
+    menuBar = new JMenuBar();
+    fileMenu = new JMenu("File");
+    darkMode = new JMenuItem("Dark mode");
+    lightMode = new JMenuItem("Standard mode");
+    pinkMode = new JMenuItem("Pink mode");
+    clear = new JMenuItem("Clear");
+    avsluta = new JMenuItem("Avsluta");
+    randomMode = new JMenuItem("Random mode");
     fileMenu.add(darkMode);
     fileMenu.add(lightMode);
+    fileMenu.add(pinkMode);
+    fileMenu.add(randomMode);
+    fileMenu.add(clear);
+    fileMenu.add(avsluta);
     menuBar.add(fileMenu);
+
     setJMenuBar(menuBar);
+
+    randomMode.addActionListener(e->{
+      randomMode();
+    });
+
+    clear.addActionListener(e->{
+      textArea.setText("");
+    });
+
+    avsluta.addActionListener(e->{
+      System.exit(0);
+    });
+
+    pinkMode.addActionListener(e -> {
+      pinkMode();
+    });
 
     darkMode.addActionListener(e -> {
       darkMode();
@@ -152,25 +196,11 @@ public class GUI extends JFrame {
 
 
   public void darkMode(){
-    textArea.setBackground(new Color(17,1,1));
-    textArea.setForeground(new Color(166, 225, 250));
-    formPanel.setBackground(new Color(80, 59, 49));
-    fNameLabel.setForeground(new Color(229, 83, 129));
-    lNameLabel.setForeground(new Color(229, 83, 129));
-    phoneLabel.setForeground(new Color(229, 83, 129));
-    mailLabel.setForeground(new Color(229, 83, 129));
-    addBtn.setBackground(new Color(17,1,1));
-    searchBtn.setBackground(new Color(17,1,1));
-    addBtn.setForeground(new Color(166, 225, 250));
-    searchBtn.setForeground(new Color(166, 225, 250));
-    fNameField.setBackground(new Color(17, 1, 1));
-    lNameField.setBackground(new Color(17, 1, 1));
-    phoneField.setBackground(new Color(17, 1, 1));
-    mailField.setBackground(new Color(17, 1, 1));
-    fNameField.setForeground(new Color(229, 83, 129));
-    lNameField.setForeground(new Color(229, 83, 129));
-    phoneField.setForeground(new Color(229, 83, 129));
-    mailField.setForeground(new Color(229, 83, 129));
+    background1 = new Color(17,1,1);
+    background2 = new Color(80, 59, 49);
+    foreground1 = new Color(166, 255, 250);
+    foreground2 = new Color(229,83,129);
+
 
     textArea.setText("\n\n\n" +
 "                     ____              _             _  \n"  +
@@ -179,31 +209,87 @@ public class GUI extends JFrame {
 "                    | |    / _ \\| '_ \\| __/ _` |/ __| __/ __| \n"+
 "                    | \\__/\\ (_) | | | | || (_| | (__| |_\\__ \\ \n"+
 "                    \\____/\\___/ |_| |_|\\__\\__,_|\\___|\\__|");
+
+    setMode();
   };
 
 
     public void defaultMode(){
-        textArea.setBackground(UIManager.getColor("TextArea.background"));
-        textArea.setForeground(UIManager.getColor("TextArea.foreground"));
-        formPanel.setBackground(UIManager.getColor("FormPanel.background"));
-        fNameLabel.setForeground(UIManager.getColor("Label.foreground"));
-        lNameLabel.setForeground(UIManager.getColor("Label.foreground"));
-        phoneLabel.setForeground(UIManager.getColor("Label.foreground"));
-        mailLabel.setForeground(UIManager.getColor("Label.foreground"));
-        addBtn.setBackground(UIManager.getColor("Button.background"));
-        searchBtn.setBackground(UIManager.getColor("Button.background"));
-        addBtn.setForeground(UIManager.getColor("Button.foreground"));
-        searchBtn.setForeground(UIManager.getColor("Button.foreground"));
-        fNameField.setBackground(UIManager.getColor("TextField.background"));
-        lNameField.setBackground(UIManager.getColor("TextField.background"));
-        phoneField.setBackground(UIManager.getColor("TextField.background"));
-        mailField.setBackground(UIManager.getColor("TextField.background"));
-        fNameField.setForeground(UIManager.getColor("TextField.foreground"));
-        lNameField.setForeground(UIManager.getColor("TextField.foreground"));
-        phoneField.setForeground(UIManager.getColor("TextField.foreground"));
-        mailField.setForeground(UIManager.getColor("TextField.foreground"));
+      background2 = UIManager.getColor("FormPanel.background");
+      background1 = UIManager.getColor("TextArea.background");
+      foreground1 = UIManager.getColor("TextArea.foreground");
+      foreground2 = UIManager.getColor("Label.foreground");
+
+      setMode();
 
     }
+
+  public void randomMode(){
+    background2 = new Color((int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255) );
+    background1 = new Color((int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255));
+    foreground1 = new Color((int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255));
+    foreground2 = new Color((int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255));
+    setMode();
+  }
+
+
+  public void pinkMode(){
+    background2 = new Color(252,102,99);
+    background1 = new Color(243, 156, 107);
+    foreground1 = new Color(38, 20, 71);
+    foreground2 = new Color(38, 20, 71);
+    setMode();
+
+  }
+
+  public void setMode(){
+    textArea.setBackground(background1);
+    textArea.setForeground(foreground1);
+    formPanel.setBackground(background2);
+    fNameLabel.setForeground(foreground2);
+    lNameLabel.setForeground(foreground2);
+    phoneLabel.setForeground(foreground2);
+    mailLabel.setForeground(foreground2);
+
+    addBtn.setBackground(background1);
+    searchBtn.setBackground(background1);
+    addBtn.setForeground(foreground1);
+    searchBtn.setForeground(foreground1);
+    removeBtn.setBackground(background1);
+    showBtn.setBackground(background1);
+    removeBtn.setForeground(foreground1);
+    showBtn.setForeground(foreground1);
+
+    fNameField.setBackground(background1);
+    lNameField.setBackground(background1);
+    phoneField.setBackground(background1);
+    mailField.setBackground(background1);
+    fNameField.setForeground(foreground2);
+    lNameField.setForeground(foreground2);
+    phoneField.setForeground(foreground2);
+    mailField.setForeground(foreground2);
+
+    menuBar.setBackground(background1);
+    menuBar.setForeground(foreground1);
+    fileMenu.setBackground(background1);
+    fileMenu.setForeground(foreground1);
+
+    darkMode.setBackground(background1);
+    darkMode.setForeground(foreground1);
+    lightMode.setForeground(foreground1);
+    lightMode.setBackground(background1);
+    pinkMode.setBackground(background1);
+    pinkMode.setForeground(foreground1);
+    avsluta.setForeground(foreground1);
+    avsluta.setBackground(background1);
+    clear.setBackground(background1);
+    clear.setForeground(foreground1);
+    randomMode.setBackground(background1);
+    randomMode.setForeground(foreground1);
+
+  }
+
+
   public void setLayout(){
 
         formPanel.setPreferredSize(new Dimension(250, 100));
