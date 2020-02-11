@@ -72,6 +72,10 @@ public class GUI extends JFrame {
       defaultMode();
     });
 
+    addBtn.addActionListener(e -> {
+      contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getTex(), mailField.getText()));
+    });
+
 
     setSize(600, 400);
     setLayout();
