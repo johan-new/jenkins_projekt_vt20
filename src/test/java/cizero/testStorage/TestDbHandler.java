@@ -16,7 +16,7 @@ class TestDbHandler {
 	// Test singleton-pattern?
 	// I prep / clean up the tests to achieve loose coupling (instead of controlling order of execution)
 
-	DbHandler dbh = new DbHandler();
+	DbHandler dbh = new DbHandler("my-secret-pw");
 
 	
 	@Test
