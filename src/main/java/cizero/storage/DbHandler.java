@@ -40,7 +40,7 @@ public class DbHandler {
 	/*private*/ public DbHandler(String dbPassword) throws SQLException, ClassNotFoundException{
 
 		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password="
-				+ dbPassword + "&useSSL=false&user=root&serverTimezone=UTC";
+				+ "MysqlP4ssw0rd!1" + "&useSSL=false&user=root&serverTimezone=UTC";
 		
 		//MysqlP4ssw0rd!1
 

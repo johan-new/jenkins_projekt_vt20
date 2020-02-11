@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,8 @@ import javax.swing.UIManager;
 
 import cizero.domain.Contact;
 import cizero.domain.ContactBook;
+import cizero.storage.ContactNotAddedException;
+import cizero.storage.ContactNotRemovedException;
 
 public class GUI extends JFrame {
 
@@ -52,7 +55,13 @@ public class GUI extends JFrame {
 
   public GUI(){
 
-	 contactBook = new ContactBook();
+	 try {
+		contactBook = new ContactBook();
+	} catch (ClassNotFoundException e2) {
+		e2.printStackTrace();
+	} catch (SQLException e2) {
+		e2.printStackTrace();
+	}
 //     Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
 //     Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
 //     Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
@@ -93,12 +102,27 @@ public class GUI extends JFrame {
 
     addBtn.addActionListener(e -> {
 
-      contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+      try {
+		contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+	} catch (SQLException e1) {
+		e1.printStackTrace();
+	} catch (ContactNotAddedException e1) {
+		e1.printStackTrace();
+	}
       clearForm();
     });
 
     removeBtn.addActionListener(e -> {
-      boolean isRemoved = contactBook.removeContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+      boolean isRemoved;
+	try {
+		isRemoved = contactBook.removeContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+	} catch (ContactNotRemovedException e1) {
+		isRemoved = false;
+		e1.printStackTrace();
+	} catch (SQLException e1) {
+		isRemoved = false;
+		e1.printStackTrace();
+	}
       System.out.println(isRemoved);
       clearForm();
     });
