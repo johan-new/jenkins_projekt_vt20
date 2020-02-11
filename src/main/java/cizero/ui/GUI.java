@@ -92,7 +92,7 @@ public class GUI extends JFrame {
     });
 
     addBtn.addActionListener(e -> {
-      contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getTex(), mailField.getText()));
+      contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
     });
 
 
@@ -105,10 +105,6 @@ public class GUI extends JFrame {
 
 
   }
-
-
-
-
 
   public void findContact(String firstName){
     tempContacts = new ArrayList<>();
