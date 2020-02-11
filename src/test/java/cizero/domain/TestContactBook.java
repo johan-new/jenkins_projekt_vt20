@@ -26,9 +26,12 @@ class TestContactBook {
 	
 	@Test
 	void testRemoveContact() {
-		cb.addContact(new Contact("fName", "lName", "07300000", "email"));
-		assertTrue(cb.removeContact(new Contact("fName", "lName", "07300000", "email")));
-		assertFalse(cb.removeContact(new Contact("fName", "lName", "07300000", "email")));
+		cb.addContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@outlook.com"));
+		assertTrue(cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@outlook.com")));
+		assertFalse(cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@outlook.com")));
 	}
+	
+	@Test
+	void 
 	
 }
