@@ -51,15 +51,15 @@ public class GUI extends JFrame {
 
 
   public GUI(){
-	  
-	 contactBook = new ContactBook();
+
+	   contactBook = new ContactBook();
 //     Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
 //     Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
 //     Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
 //     contactBook.addContact(pontus);
 //     contactBook.addContact(kalle);
 //     contactBook.addContact(pontusPersson);
-	 contacts = contactBook.getContacts();
+	   contacts = contactBook.getContacts();
 
     setLayout(new BorderLayout());
 
@@ -92,7 +92,8 @@ public class GUI extends JFrame {
     });
 
     addBtn.addActionListener(e -> {
-      contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getTex(), mailField.getText()));
+      contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+      clearForm();
     });
 
 
@@ -106,7 +107,9 @@ public class GUI extends JFrame {
 
   }
 
-
+  public void clearForm(){
+    fNameField.setText(""); lNameField.setText(""); phoneField.setText(); mailField.setText();
+  }
 
 
 
