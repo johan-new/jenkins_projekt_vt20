@@ -33,16 +33,12 @@ public class DbHandler {
 	private Statement s;
 
 	
-<<<<<<< HEAD
 	public DbHandler() throws SQLException, ClassNotFoundException{
 		this("my-secret-pw");
 	}
 	
 	/*private*/ public DbHandler(String dbPassword) throws SQLException, ClassNotFoundException{
-		
-=======
-	/*private*/ public DbHandler(String dbPassword) {
->>>>>>> 58f157d99d0301300168cb82f352e9b60ea711c9
+
 		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password="
 				+ dbPassword + "&useSSL=false&user=root&serverTimezone=UTC";
 		
