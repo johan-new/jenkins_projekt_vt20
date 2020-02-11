@@ -20,6 +20,10 @@ import cizero.domain.*;
 * @since   2019-02-05
 */
 
+//TODO
+//support for no db/tbl
+//mysql passw in constructor
+
 
 public class DbHandler {
 
@@ -28,15 +32,23 @@ public class DbHandler {
 	private Connection c;
 	private Statement s;
 
-	/*private*/ public DbHandler() {
-		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password=MysqlP4ssw0rd!1&useSSL=false&user=root&serverTimezone=UTC";
+	
+	/*private*/ public DbHandler(String dbPassword) {
+		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password="
+				+ dbPassword + "&useSSL=false&user=root&serverTimezone=UTC";
+		
 		//MysqlP4ssw0rd!1
+
 		//establish connection
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 	        c = DriverManager.getConnection("jdbc:mysql://" + dbURL);
+	        //CREATE DATABASE IF NOT EXISTS dbContacts
 	        c.setCatalog("dbContacts");
+
+	        //CREATE TABLE IF NOT EXISTS tblContactbook (....);
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,14 +56,14 @@ public class DbHandler {
 
 	}
 
-
 	// Thread-safe
 	public static synchronized DbHandler getInstance() {
 		if (instance == null) {
 			System.out.println("NEW");
-			instance = new DbHandler();
-		}
-			return instance;
+			instance = new DbHandler("my-secret-pw");
+			}
+		
+		return instance;
 	}
 
 
@@ -154,9 +166,9 @@ public class DbHandler {
 		}
 
 		return isRemoved;
-
 	}
 
+	
 	public boolean removeContact(ArrayList<Contact> Contacts) {
 
 		boolean areRemoved = true;
