@@ -29,7 +29,7 @@ public class DbHandler {
 	private Statement s;
 
 	/*private*/ public DbHandler() {
-		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password=Heroma11&useSSL=false&user=root&serverTimezone=UTC";
+		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password=MysqlP4ssw0rd!1&useSSL=false&user=root&serverTimezone=UTC";
 		//MysqlP4ssw0rd!1
 		//establish connection
 

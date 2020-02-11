@@ -1,5 +1,6 @@
 package cizero.domain;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import cizero.storage.DbHandler;
@@ -22,21 +23,25 @@ public class ContactBook {
 		return contacts;
 	}
 	
-	public boolean addContact(Contact contact) {
+	public void addContact(Contact contact) throws SQLException{
 		contacts.add(contact);
-		return db.addContact(contact);
+		db.addContact(contact);
 	}
 	
-	public boolean addContact(ArrayList<Contact> contacts) {
+	public void addContact(ArrayList<Contact> contacts) throws SQLException{
 		for(Contact contact : contacts) {
 			this.contacts.add(contact);
 		}
-		return db.addContact(contacts);
+		db.addContact(contacts);
 	}
 	
 	public boolean removeContact(Contact contact) {
-		contacts.remove(contact);
-		return db.removeContact(contact);
+		System.out.println(contact.hashCode());
+		for(Contact c : contacts) {
+			System.out.println(c.hashCode());
+		}
+		db.removeContact(contact);
+		return contacts.remove(contact);
 	}
 	
 	public boolean removeContact(ArrayList<Contact> contacts) {
