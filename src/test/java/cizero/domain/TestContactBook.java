@@ -1,34 +1,42 @@
 package cizero.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.ArrayList;
-import cizero.domain.Contact;
-import cizero.storage.DbHandler;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
+import cizero.domain.ContactBook;
+
 class TestContactBook {
-	
+
 	ContactBook cb;
 
 	@BeforeEach
 	void reset() {
 		cb = new ContactBook();
 	}
-	
+
 	@Test
 	void testAddContact() {
-		assertTrue(cb.addContact(new Contact("fName", "lName", "07300000", "email")));
-		cb.removeContact(new Contact("fName", "lName", "07300000", "email"));
+		try {
+			cb.addContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
+		} catch (SQLException e) {
+			fail("hej");
+		}
 	}
-	
+
 	@Test
 	void testRemoveContact() {
-		cb.addContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@outlook.com"));
-		assertTrue(cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@outlook.com")));
-		assertFalse(cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@outlook.com")));
+		try {
+			cb.addContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
+
+		} catch (SQLException e) {
+			fail("Could not add contact");
+		}
+		assertTrue(cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com")));
 	}
-	
+
 }

@@ -36,10 +36,10 @@ public class ContactBook {
 	}
 	
 	public boolean removeContact(Contact contact) {
-		System.out.println(contact.hashCode());
-		for(Contact c : contacts) {
-			System.out.println(c.hashCode());
-		}
+//		System.out.println(contact.hashCode());
+//		for(Contact c : contacts) {
+//			System.out.println(c.hashCode());
+//		}
 		db.removeContact(contact);
 		return contacts.remove(contact);
 	}
