@@ -1,18 +1,35 @@
 package cizero.ui;
 
-import cizero.domain.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+
+import cizero.domain.Contact;
+import cizero.domain.ContactBook;
 
 public class GUI extends JFrame {
 
   private ContactBook contactBook;
   private ArrayList<Contact> tempContacts;
 
-  private ArrayList<Contact> contactBookTest = new ArrayList<>();
-
+  private List<Contact> contacts;
   private JTextField fNameField = new JTextField(10);
   private JTextField lNameField = new JTextField(10);
   private JTextField phoneField = new JTextField(10);
@@ -34,13 +51,15 @@ public class GUI extends JFrame {
 
 
   public GUI(){
-
-     Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
-     Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
-     Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
-     contactBookTest.add(pontus);
-     contactBookTest.add(kalle);
-     contactBookTest.add(pontusPersson);
+	  
+	 contactBook = new ContactBook();
+//     Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
+//     Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
+//     Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
+//     contactBook.addContact(pontus);
+//     contactBook.addContact(kalle);
+//     contactBook.addContact(pontusPersson);
+	 contacts = contactBook.getContacts();
 
     setLayout(new BorderLayout());
 
@@ -89,7 +108,7 @@ public class GUI extends JFrame {
 
   public void findContact(String firstName){
     tempContacts = new ArrayList<>();
-    for(Contact contact : contactBookTest){
+    for(Contact contact : contacts){
       if (contact.getFirstName().equals(firstName)){
         tempContacts.add(contact);
       }
