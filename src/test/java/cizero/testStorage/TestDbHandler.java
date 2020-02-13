@@ -30,6 +30,7 @@ class TestDbHandler {
 	 * @since   2019-02-05
 	 */
 
+
 	DbHandler dbh;
 
 
@@ -74,7 +75,7 @@ class TestDbHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	void testAddContact() {
 		try {
@@ -87,7 +88,7 @@ class TestDbHandler {
 
 
 	}
-	
+
 	@Test
 	void testRemoveContact() {
 		try {
@@ -103,25 +104,25 @@ class TestDbHandler {
 			e.printStackTrace();
 		}
 	}
-	
-	@Test 
+
+	@Test
 	void testAddManyContacts(){
 
 		assertTrue(addManyContacts());
-		
+
 		//clean-up
 		removeManyContacts();
 	}
-	
+
 	@Test
 	void testRemoveManyContacts(){
 		//prep test
 		addManyContacts();
-		
+
 		assertTrue(removeManyContacts());
-		
+
 	}
-	
+
 	boolean addManyContacts() {
 		ArrayList<Contact> Contacts = new ArrayList<Contact>();
 		Contacts.add(new Contact("Johann Sebastian","Bach","070345345","sebbe_cool@mail.com"));
@@ -134,7 +135,7 @@ class TestDbHandler {
 
 		return false;
 	}
-	
+
 	boolean removeManyContacts() {
 		ArrayList<Contact> Contacts = new ArrayList<Contact>();
 		Contacts.add(new Contact("Johann Sebastian","Bach","070345345","sebbe_cool@mail.com"));

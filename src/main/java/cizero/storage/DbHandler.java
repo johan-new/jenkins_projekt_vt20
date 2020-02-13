@@ -36,6 +36,7 @@ public class DbHandler {
 		this("my-secret-pw");
 	}
 
+
 	/**
 	 * Constructor. Uses a default password for running tests
 	 * private due to Singelton pattern
@@ -43,6 +44,7 @@ public class DbHandler {
 	 * @param dbPassword password to database, clear text
 	 */
 	
+
 	private DbHandler(String dbPassword) throws SQLException, ClassNotFoundException{
 
 		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password="
@@ -64,9 +66,10 @@ public class DbHandler {
 	public static synchronized DbHandler getInstance(String passw)  throws SQLException, ClassNotFoundException{
 		if (instance == null) {
 			System.out.println("NEW");
+
 			instance = new DbHandler(passw);
 			}
-		
+
 		return instance;
 	}
 
@@ -106,8 +109,10 @@ public class DbHandler {
 	 */
 	 public ArrayList<Contact> readDb() throws SQLException{
 
+
 		initilizeDB();
-		 
+
+
 		ArrayList<Contact> returnContacts = new ArrayList<Contact>();
 
 		ResultSet resultSet;
@@ -124,7 +129,7 @@ public class DbHandler {
 					  				resultSet.getString("fldTNr"),
 					  				resultSet.getString("fldEmail")));
 		  }
-			
+
 		 return returnContacts;
 	}
 
@@ -162,11 +167,11 @@ public class DbHandler {
 
 		isAdded = s.executeUpdate(query.toString()) > 0;
 		//if 0 rows were affected isAdded will be set to false ^
-		
+
 		if (!isAdded) {
 			throw new ContactNotAddedException("Kund ej lägga till kontakt");
 		}
-		
+
 		return isAdded;
 	}
 
@@ -180,7 +185,7 @@ public class DbHandler {
 				areAdded = false;
 			}
 		}
-		
+
 		if (!areAdded) {
 			throw new ContactNotAddedException("Kund ej lägga till kontakt");
 		}
@@ -213,7 +218,7 @@ public class DbHandler {
 		if (!isRemoved) {
 			throw new ContactNotRemovedException("Kund ej ta bort kontakt");
 		}
-		
+
 		return isRemoved;
 	}
 
@@ -227,7 +232,7 @@ public class DbHandler {
 				areRemoved = false;
 			}
 		}
-		
+
 		if (!areRemoved) {
 			throw new ContactNotRemovedException("Kund ej ta bort kontakt");
 		}
