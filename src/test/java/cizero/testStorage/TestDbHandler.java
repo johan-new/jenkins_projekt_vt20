@@ -9,6 +9,7 @@ import cizero.domain.Contact;
 
 import cizero.storage.ContactNotAddedException;
 import cizero.storage.ContactNotRemovedException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +30,18 @@ class TestDbHandler {
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	void isSingelton(){
+		try {
+			DbHandler dbh2 = dbh.getInstance();
+			//test if dbh2 only points to dbh and therefore is NOT a _new_ instance
+			assertTrue(dbh == dbh2);
+		} catch (SQLException | ClassNotFoundException e) {
+			fail("isSingelton()");
+		}	
+
 	}
 
 	@Test
