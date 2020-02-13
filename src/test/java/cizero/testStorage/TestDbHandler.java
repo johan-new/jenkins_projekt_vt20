@@ -17,72 +17,6 @@ import cizero.storage.DbHandler;
 
 class TestDbHandler {
 
-<<<<<<< HEAD
-	// //TODO
-	// // Test singleton-pattern?
-	// // I prep / clean up the tests to achieve loose coupling (instead of controlling order of execution)
-	//
-	// DbHandler dbh = new DbHandler("my-secret-pw");
-	//
-	//
-	// @Test
-	// void testReadDB() {
-	// 	System.out.println("testReadDB");
-	// 	assertNotNull(dbh.readDb());
-	// }
-	//
-	// @Test
-	// void testAddContact() {
-	// 	assertTrue(dbh.addContact(new Contact("Hans","Gretchen","07000001", "hans@mail.de")));
-	//
-	// 	//clean-up
-	// 	dbh.removeContact(new Contact("Hans","Gretchen","07000001", "hans@mail.de"));
-	// }
-	//
-	// @Test
-	// void testRemoveContact() {
-	// 	//prep for test
-	// 	dbh.addContact(new Contact("Hans","Gretchen","07000001", "hans@mail.de"));
-	//
-	// 	//first time removal should suceed
-	// 	assertTrue(dbh.removeContact(new Contact("Hans","Gretchen","07000001", "hans@mail.de")));
-	// 	//but not the second
-	// 	assertFalse(dbh.removeContact(new Contact("Hans","Gretchen","07000001", "hans@mail.de")));
-	//
-	// }
-	//
-	// @Test
-	// void testAddManyContacts(){
-	//
-	// 	assertTrue(addManyContacts());
-	//
-	// 	//clean-up
-	// 	removeManyContacts();
-	// }
-	//
-	// @Test
-	// void testRemoveManyContacts(){
-	// 	//prep test
-	// 	addManyContacts();
-	//
-	// 	assertTrue(removeManyContacts());
-	//
-	// }
-	//
-	// boolean addManyContacts() {
-	// 	ArrayList<Contact> Contacts = new ArrayList<Contact>();
-	// 	Contacts.add(new Contact("Johann Sebastian","Bach","070345345","sebbe_cool@mail.com"));
-	// 	Contacts.add(new Contact("Nine","Simone","070335345","jazz-nina@mail.com"));
-	// 	return dbh.addContact(Contacts);
-	// }
-	//
-	// boolean removeManyContacts() {
-	// 	ArrayList<Contact> Contacts = new ArrayList<Contact>();
-	// 	Contacts.add(new Contact("Johann Sebastian","Bach","070345345","sebbe_cool@mail.com"));
-	// 	Contacts.add(new Contact("Nine","Simone","070335345","jazz-nina@mail.com"));
-	// 	return dbh.removeContact(Contacts);
-	// }
-=======
 	DbHandler dbh;
 
 
@@ -102,7 +36,7 @@ class TestDbHandler {
 			assertTrue(dbh == dbh2);
 		} catch (SQLException | ClassNotFoundException e) {
 			fail("isSingelton()");
-		}	
+		}
 
 	}
 
@@ -127,7 +61,7 @@ class TestDbHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	void testAddContact() {
 		try {
@@ -140,7 +74,7 @@ class TestDbHandler {
 
 
 	}
-	
+
 	@Test
 	void testRemoveContact() {
 		try {
@@ -156,25 +90,25 @@ class TestDbHandler {
 			e.printStackTrace();
 		}
 	}
-	
-	@Test 
+
+	@Test
 	void testAddManyContacts(){
 
 		assertTrue(addManyContacts());
-		
+
 		//clean-up
 		removeManyContacts();
 	}
-	
+
 	@Test
 	void testRemoveManyContacts(){
 		//prep test
 		addManyContacts();
-		
+
 		assertTrue(removeManyContacts());
-		
+
 	}
-	
+
 	boolean addManyContacts() {
 		ArrayList<Contact> Contacts = new ArrayList<Contact>();
 		Contacts.add(new Contact("Johann Sebastian","Bach","070345345","sebbe_cool@mail.com"));
@@ -187,7 +121,7 @@ class TestDbHandler {
 
 		return false;
 	}
-	
+
 	boolean removeManyContacts() {
 		ArrayList<Contact> Contacts = new ArrayList<Contact>();
 		Contacts.add(new Contact("Johann Sebastian","Bach","070345345","sebbe_cool@mail.com"));
@@ -200,6 +134,5 @@ class TestDbHandler {
 
 		return false;
 	}
->>>>>>> 3d2c49dc6ab1b8beb3106fa4d136c713d06b9ca2
 
 }
