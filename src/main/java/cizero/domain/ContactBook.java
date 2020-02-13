@@ -8,15 +8,28 @@ import cizero.storage.ContactNotAddedException;
 import cizero.storage.ContactNotRemovedException;
 import cizero.storage.DbHandler;
 
+/**
+ * <h1><i>ContactBook</i></h1>
+ * <p>
+ * Serves as a connection between DBHandler and the GUI. 
+ * Data is stored in an ArrayList with readContactsFromDB() 
+ * and is then
+ * @author Erik
+ *
+ */
 public class ContactBook {
 	private List<Contact> contacts = new ArrayList<>();
 	private DbHandler db;
 
-	public ContactBook() throws ClassNotFoundException, SQLException {
+	public ContactBook(String password) throws ClassNotFoundException, SQLException {
 		db = DbHandler.getInstance();
 		readContactsFromDB();
 	}
 
+	/**
+	 * 
+	 * @return a list of contacts
+	 */
 	public List<Contact> getContacts() {
 		return contacts;
 	}
