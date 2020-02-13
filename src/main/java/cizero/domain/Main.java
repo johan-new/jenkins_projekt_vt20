@@ -9,7 +9,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		GUI gui;
-		if(args == null) {
+		//if(args[] == null) {
 			final String password;
 			if (System.console() == null) {
 				final JPasswordField pf = new JPasswordField();
@@ -20,10 +20,9 @@ public class Main {
 			}
 			
 			gui = new GUI(password);
-		} else {
-			gui = new GUI(args);
-		}
-		
+		//} else {
+			//gui = new GUI(args[0]);
+		//}
 	}
 
 }

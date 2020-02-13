@@ -20,7 +20,7 @@ class TestContactBook {
 	@BeforeEach
 	void reset() {
 		try {
-			cb = new ContactBook();
+			cb = new ContactBook("MysqlP4ssw0rd!1");
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
