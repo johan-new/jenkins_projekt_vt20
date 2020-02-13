@@ -20,22 +20,13 @@ class TestContactBook {
 	@BeforeEach
 	void reset() {
 		try {
-			cb = new ContactBook("MysqlP4ssw0rd!1");
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
-			cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
-		} catch (ContactNotRemovedException e) {
-			// TODO Auto-generated catch block
+			cb = new ContactBook("my-secret-pw");
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+			fail("Class could not be found.");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			fail("Class could not be found.");
 		}
 	}
 
@@ -45,11 +36,11 @@ class TestContactBook {
 			try {
 				cb.addContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
 			} catch (ContactNotAddedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				fail("Contact could not be added.");
 			}
 		} catch (SQLException e) {
-			fail("hej");
+			fail("Contact could not be added.");
 		}
 	}
 
@@ -59,20 +50,20 @@ class TestContactBook {
 			try {
 				cb.addContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
 			} catch (ContactNotAddedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				fail("Contact could not be added.");
 			}
 
 		} catch (SQLException e) {
-			fail("Could not add contact");
+			fail("Connection");
 		}
 		try {
 			assertTrue(cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com")));
 		} catch (ContactNotRemovedException e) {
-			fail("Contact could not be removed or does not exist");
+			fail("Contact could not be removed.");
 			e.printStackTrace();
 		} catch (SQLException e) {
-			fail("fuck");
+			fail("");
 			e.printStackTrace();
 		}
 	}
