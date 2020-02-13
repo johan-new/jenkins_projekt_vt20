@@ -20,6 +20,10 @@ import cizero.domain.*;
 * @since   2019-02-05
 */
 
+//TODO
+//support for no db/tbl
+//mysql passw in constructor
+
 
 public class DbHandler {
 
@@ -28,71 +32,71 @@ public class DbHandler {
 	private Connection c;
 	private Statement s;
 
-	/*private*/ public DbHandler() {
-		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password=Heroma11&useSSL=false&user=root&serverTimezone=UTC";
+
+	public DbHandler() throws SQLException, ClassNotFoundException{
+		this("my-secret-pw");
+	}
+
+	/*private*/ public DbHandler(String dbPassword) throws SQLException, ClassNotFoundException{
+
+		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password="
+				+ dbPassword + "&useSSL=false&user=root&serverTimezone=UTC";
+
 		//MysqlP4ssw0rd!1
+
 		//establish connection
 
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-	        c = DriverManager.getConnection("jdbc:mysql://" + dbURL);
-	        c.setCatalog("dbContacts");
+		Class.forName("com.mysql.cj.jdbc.Driver");
+        c = DriverManager.getConnection("jdbc:mysql://" + dbURL);
+        //CREATE DATABASE IF NOT EXISTS dbContacts
+        c.setCatalog("dbContacts");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        //CREATE TABLE IF NOT EXISTS tblContactbook (....);
+
+
 
 	}
-
 
 	// Thread-safe
-	public static synchronized DbHandler getInstance() {
+	public static synchronized DbHandler getInstance()  throws SQLException, ClassNotFoundException{
 		if (instance == null) {
 			System.out.println("NEW");
-			instance = new DbHandler();
-		}
-			return instance;
+			instance = new DbHandler("5959@Sutnop");
+			}
+
+		return instance;
 	}
 
 
-	public void closeConnection() {
-		try {
+	public void closeConnection()  throws SQLException{
 			c.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 
-	 public ArrayList<Contact> readDb(){
+	 public ArrayList<Contact> readDb() throws SQLException{
+
 		ArrayList<Contact> returnContacts = new ArrayList<Contact>();
 
 		ResultSet resultSet;
 
-		  try {
-			  System.out.println("readDB");
-			  s = c.createStatement();
-			  s.executeQuery("SELECT * FROM tblContactbook");
-			  resultSet = s.getResultSet();
+		  System.out.println("Reading database....");
+		  s = c.createStatement();
+		  s.executeQuery("SELECT * FROM tblContactbook");
+		  resultSet = s.getResultSet();
 
-			  while(resultSet.next()) { //läser in värden från databasen
-				  returnContacts.add(new Contact(
-						  				resultSet.getString("fldFName"),
-						  				resultSet.getString("fldLName"),
-						  				resultSet.getString("fldTNr"),
-						  				resultSet.getString("fldEmail")));
-			  }
-
-		 } catch (SQLException e){
-			 e.printStackTrace();
-			 return null;
-		 }
+		  while(resultSet.next()) { //läser in värden från databasen
+			  returnContacts.add(new Contact(
+					  				resultSet.getString("fldFName"),
+					  				resultSet.getString("fldLName"),
+					  				resultSet.getString("fldTNr"),
+					  				resultSet.getString("fldEmail")));
+		  }
 
 		 return returnContacts;
 	}
 
 
-	public boolean addContact(Contact contact) {
+	public boolean addContact(Contact contact) throws ContactNotAddedException, SQLException{
 		boolean isAdded = false;
 
 		ResultSet resultSet;
@@ -102,23 +106,22 @@ public class DbHandler {
 									+ "'" + contact.getLastName() + "','"
 									+ contact.getTeleNr() + "',"
 									+ "'" + contact.getEmail() + "')");
-		try {
-			System.out.println("Adding contact...");
-			s = c.createStatement();
 
-			isAdded = s.executeUpdate(query.toString()) > 0;
-			//if 0 rows were affected isAdded will be set to false ^
+		System.out.println("Adding contact...");
+		s = c.createStatement();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+		isAdded = s.executeUpdate(query.toString()) > 0;
+		//if 0 rows were affected isAdded will be set to false ^
+
+		if (!isAdded) {
+			throw new ContactNotAddedException("Kund ej lägga till kontakt");
 		}
 
 		return isAdded;
 	}
 
 
-	public boolean addContact(ArrayList<Contact> Contacts) {
+	public boolean addContact(ArrayList<Contact> Contacts) throws ContactNotAddedException, SQLException{
 		boolean areAdded = true;
 
 		for (int i = 0; i < Contacts.size(); i++) {
@@ -128,11 +131,15 @@ public class DbHandler {
 			}
 		}
 
+		if (!areAdded) {
+			throw new ContactNotAddedException("Kund ej lägga till kontakt");
+		}
+
 		return areAdded;
 	}
 
 
-	public boolean removeContact(Contact contact) {
+	public boolean removeContact(Contact contact) throws ContactNotRemovedException, SQLException{
 		boolean isRemoved = false;
 
 		ResultSet resultSet;
@@ -142,22 +149,20 @@ public class DbHandler {
 												+ contact.getTeleNr() + "' AND fldEmail='"
 												+ contact.getEmail() + "'");
 
-		try {
-			System.out.println("Removing contact...");
-			s = c.createStatement();
+		System.out.println("Removing contact...");
+		s = c.createStatement();
 
-			isRemoved = s.executeUpdate(query.toString()) > 0;
-			//if 0 rows were affected isRemoved will be set to false ^
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+		isRemoved = s.executeUpdate(query.toString()) > 0;
+		//if 0 rows were affected isRemoved will be set to false ^
+
+		if (!isRemoved) {
+			throw new ContactNotRemovedException("Kund ej ta bort kontakt");
 		}
 
 		return isRemoved;
-
 	}
 
-	public boolean removeContact(ArrayList<Contact> Contacts) {
+	public boolean removeContact(ArrayList<Contact> Contacts)  throws ContactNotRemovedException, SQLException{
 
 		boolean areRemoved = true;
 
@@ -166,6 +171,10 @@ public class DbHandler {
 			{
 				areRemoved = false;
 			}
+		}
+
+		if (!areRemoved) {
+			throw new ContactNotRemovedException("Kund ej ta bort kontakt");
 		}
 
 		return areRemoved;

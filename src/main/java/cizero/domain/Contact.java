@@ -45,4 +45,18 @@ public class Contact {
   public void setEmail(String email) {
 	  this.email = email;
   }
+  
+  @Override
+  public String toString() {
+	  return fName + " " + lName;
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+	Contact c = (Contact) o;
+	//System.out.println(fName + " );
+	//System.out.println(c.fName + " " + c.lName + " " + c.teleNr + " " + c.email);
+	return (this.fName.equals(c.fName) && this.lName.equals(c.lName) && this.teleNr.equals(c.teleNr) && this.email.equals(c.email));  
+  }
+  
 }

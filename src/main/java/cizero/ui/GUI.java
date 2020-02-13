@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,15 +24,14 @@ import javax.swing.UIManager;
 
 import cizero.domain.Contact;
 import cizero.domain.ContactBook;
+import cizero.storage.ContactNotAddedException;
+import cizero.storage.ContactNotRemovedException;
 
 public class GUI extends JFrame {
 
   private ContactBook contactBook;
   private ArrayList<Contact> tempContacts;
-
-  //private List<Contact> contacts;
   private List<Contact> contacts = new ArrayList<>();
-
 
   private JTextField fNameField = new JTextField(10);
   private JTextField lNameField = new JTextField(10);
@@ -69,16 +69,25 @@ public class GUI extends JFrame {
 
   public GUI(){
 
-	  //contactBook = new ContactBook();
-
-    Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
-    Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
-    Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
-    contacts.add(pontus);
-    contacts.add(kalle);
-    contacts.add(pontusPersson);
-
-    // contacts = contactBook.getContacts();
+	 try {
+		contactBook = new ContactBook();
+	} catch (ClassNotFoundException e2) {
+		textArea.setText("Lyckades inte upprätta koppling med databas");
+	} catch (SQLException e2) {
+		textArea.setText("Lyckades inte upprätta koppling till databas");
+	}
+//     Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
+//     Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
+//     Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
+//     contacts.add(pontus);
+//     contacts.add(kalle);
+//     contacts.add(pontusPersson);
+   try{
+	 contacts = contactBook.getContacts();
+ } catch(Exception e){
+   contacts = new ArrayList<>();
+   textArea.setText("Lyckades inte upprätta koppling till databasen");
+ }
 
     setLayout(new BorderLayout());
 
@@ -128,7 +137,8 @@ public class GUI extends JFrame {
     });
 
     searchBtn.addActionListener(e -> {
-      findContact(fNameField.getText());
+      findContact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText());
+      clearForm();
     });
 
     lightMode.addActionListener(e -> {
@@ -136,12 +146,31 @@ public class GUI extends JFrame {
     });
 
     addBtn.addActionListener(e -> {
-      contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
-      clearForm();
-    });
+          try {
+    		contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+    	} catch (SQLException e1) {
+      //  textArea.setText("SQLException");
+    		textArea.setText("Kontakten finns redan i kontaktboken");
+    	} catch (ContactNotAddedException e1) {
+      //  textArea.setText("ContactNotAddedException");
+    		textArea.setText("Kontakten finns redan i kontaktboken");
+    	}
+        clearForm();
+      });
 
     removeBtn.addActionListener(e -> {
-      contactBook.removeContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+      boolean isRemoved;
+    	try {
+    		isRemoved = contactBook.removeContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+        textArea.setText("Kontakten borttagen");
+    	} catch (ContactNotRemovedException e1) {
+        textArea.setText("Det gick inte att ta bort kontakten");
+    		isRemoved = false;
+    	} catch (SQLException e1) {
+    		isRemoved = false;
+    		textArea.setText("Det gick inte att ta bort kontakten");
+    	}
+
       clearForm();
     });
 
@@ -155,9 +184,6 @@ public class GUI extends JFrame {
     });
 
 
-
-
-
     setSize(600, 400);
     setLayout();
     setVisible(true);
@@ -168,16 +194,17 @@ public class GUI extends JFrame {
 
   }
 
+
   public void clearForm(){
     fNameField.setText(""); lNameField.setText(""); phoneField.setText(""); mailField.setText("");
   }
 
 
-
-  public void findContact(String firstName){
+  public void findContact(String firstName, String lastName, String telenr, String mail){
     tempContacts = new ArrayList<>();
     for(Contact contact : contacts){
-      if (contact.getFirstName().equals(firstName)){
+      if(contact.getFirstName().equalsIgnoreCase(firstName) || contact.getLastName().equalsIgnoreCase(lastName) ||
+        contact.getTeleNr().equalsIgnoreCase(telenr) || contact.getEmail().equalsIgnoreCase(mail)){
         tempContacts.add(contact);
       }
     }
@@ -193,6 +220,40 @@ public class GUI extends JFrame {
       textArea.setText("Kontakten hittades inte");
     }
   }
+
+
+  public JTextArea getTextArea(){
+    return textArea;
+  }
+
+  public JButton getSearchBtn(){
+    return searchBtn;
+  }
+
+  public JButton getAddBtn(){
+    return addBtn;
+  }
+
+  public List<Contact> getContacts(){
+    return contacts;
+  }
+
+  public JTextField getFNameField(){
+    return fNameField;
+  }
+
+  public JTextField getLNameField(){
+    return lNameField;
+  }
+
+  public JTextField getPhoneField(){
+    return phoneField;
+  }
+
+  public JTextField getMailField(){
+    return mailField;
+  }
+
 
 
   public void darkMode(){
@@ -225,10 +286,10 @@ public class GUI extends JFrame {
     }
 
   public void randomMode(){
-    background2 = new Color((int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255) );
-    background1 = new Color((int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255));
-    foreground1 = new Color((int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255));
-    foreground2 = new Color((int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255));
+    background2 = new Color((int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100) );
+    background1 = new Color((int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100));
+    foreground1 = new Color((int)Math.floor(Math.random() *100) + 155, (int)Math.floor(Math.random() *155) + 100, (int)Math.floor(Math.random() *155) +100);
+    foreground2 = new Color((int)Math.floor(Math.random() *155) + 100, (int)Math.floor(Math.random() *155) + 100, (int)Math.floor(Math.random() *155) + 100);
     setMode();
   }
 
@@ -288,6 +349,8 @@ public class GUI extends JFrame {
     randomMode.setForeground(foreground1);
 
   }
+
+
 
 
   public void setLayout(){
