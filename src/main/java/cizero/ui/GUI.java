@@ -67,21 +67,17 @@ public class GUI extends JFrame {
   Color foreground2;
 
 
-  public GUI(){
+  public GUI(String password){
 
 	 try {
-		contactBook = new ContactBook();
+		contactBook = new ContactBook(password);
 	} catch (ClassNotFoundException e2) {
 		textArea.setText("Lyckades inte upprätta koppling med databas");
 	} catch (SQLException e2) {
 		textArea.setText("Lyckades inte upprätta koppling till databas");
 	}
-//     Contact pontus = new Contact("Pontus", "Eriksson", "987654", "joi@gjoij.coe");
-//     Contact kalle = new Contact("Kalle", "Persson", "982000", "kalle@gjoij.coe");
-//     Contact pontusPersson = new Contact("Pontus", "Persson", "687654", "pp@gjoij.coe");
-//     contacts.add(pontus);
-//     contacts.add(kalle);
-//     contacts.add(pontusPersson);
+
+
    try{
 	 contacts = contactBook.getContacts();
  } catch(Exception e){
