@@ -40,7 +40,7 @@ public class TestGUI {
 
   @Test
   public void testSearchBtnFirstName(){
-    gui = new GUI();
+    gui = new GUI("my-secret-password");
     gui.getFNameField().setText("Pelle");
     gui.getLNameField().setText("Svanslös");
     gui.getPhoneField().setText("234");
@@ -58,7 +58,7 @@ public class TestGUI {
 
   @Test
   public void testSearchBtnFirstNameIgnoresCase(){
-    gui = new GUI();
+    gui = new GUI("my-secret-password");
     gui.getFNameField().setText("Pelle");
     gui.getLNameField().setText("Svanslös");
     gui.getPhoneField().setText("234");
