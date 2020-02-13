@@ -16,10 +16,19 @@ import org.junit.jupiter.api.Test;
 import cizero.storage.DbHandler;
 
 class TestDbHandler {
-	
-	//TODO
-	// Test singleton-pattern?
-	// I prep / clean up the tests to achieve loose coupling (instead of controlling order of execution)
+
+	/**
+	 * <h1>TestDbHandler</h1>
+	 *
+	 * 	Testing main functionality of DbHandler class.
+	 *
+	 * 	I prep / clean up the tests in order to achieve loose coupling,
+	 * 	instead of controlling order of execution of the tests.
+	 *
+	 * @author  Johan Nyberg
+	 * @version 1.0
+	 * @since   2019-02-05
+	 */
 
 	DbHandler dbh;
 
@@ -40,7 +49,7 @@ class TestDbHandler {
 			assertTrue(dbh == dbh2);
 		} catch (SQLException | ClassNotFoundException e) {
 			fail("isSingelton()");
-		}	
+		}
 
 	}
 
