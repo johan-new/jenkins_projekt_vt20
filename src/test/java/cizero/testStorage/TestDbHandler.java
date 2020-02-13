@@ -9,6 +9,7 @@ import cizero.domain.Contact;
 
 import cizero.storage.ContactNotAddedException;
 import cizero.storage.ContactNotRemovedException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import cizero.storage.DbHandler;
@@ -21,12 +22,24 @@ class TestDbHandler {
 
 	DbHandler dbh;
 
+
 	{
 		try {
-			dbh = new DbHandler("my-secret-pw");
+			dbh = DbHandler.getInstance("my-secret-pw");
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
-		} 
+		}
+	}
+
+	@Test
+	void dropAndCreateDB(){
+		try {
+			dbh.dropDb();
+			dbh.initilizeDB();
+		} catch (SQLException e) {
+			fail("dropAndCreateDB failed.");
+		}
+
 	}
 
 
