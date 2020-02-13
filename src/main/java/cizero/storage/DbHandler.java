@@ -20,10 +20,6 @@ import cizero.domain.*;
 * @since   2019-02-05
 */
 
-//TODO
-//support for no db/tbl
-//mysql passw in constructor
-
 
 public class DbHandler {
 
@@ -33,11 +29,11 @@ public class DbHandler {
 	private Statement s;
 
 
-	public DbHandler() throws SQLException, ClassNotFoundException{
+	private DbHandler() throws SQLException, ClassNotFoundException{
 		this("my-secret-pw");
 	}
 
-	/*private*/ public DbHandler(String dbPassword) throws SQLException, ClassNotFoundException{
+	private DbHandler(String dbPassword) throws SQLException, ClassNotFoundException{
 
 		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password="
 				+ dbPassword + "&useSSL=false&user=root&serverTimezone=UTC";
@@ -45,35 +41,51 @@ public class DbHandler {
 		//MysqlP4ssw0rd!1
 
 		//establish connection
-
 		Class.forName("com.mysql.cj.jdbc.Driver");
         c = DriverManager.getConnection("jdbc:mysql://" + dbURL);
-        //CREATE DATABASE IF NOT EXISTS dbContacts
-        c.setCatalog("dbContacts");
 
-        //CREATE TABLE IF NOT EXISTS tblContactbook (....);
-
-
+		initilizeDB();
 
 	}
 
 	// Thread-safe
-	public static synchronized DbHandler getInstance()  throws SQLException, ClassNotFoundException{
+	public static synchronized DbHandler getInstance(String passw)  throws SQLException, ClassNotFoundException{
 		if (instance == null) {
 			System.out.println("NEW");
-			instance = new DbHandler("5959@Sutnop");
+
+			instance = new DbHandler(passw);
 			}
 
 		return instance;
 	}
 
+	public static synchronized DbHandler getInstance()  throws SQLException, ClassNotFoundException{
+		return getInstance("my-secret-pw");
+	}
+
+	public void initilizeDB() throws SQLException {
+		s = c.createStatement();
+		s.executeUpdate("CREATE DATABASE IF NOT EXISTS dbContacts");
+		s.executeUpdate("CREATE TABLE IF NOT EXISTS tblContactbook " +
+				"(fldFName varchar(30) NOT NULL,fldLName varchar(30) NOT NULL," +
+				" fldTNr varchar(20) NOT NULL, fldEmail varchar(20) NOT NULL, " +
+				"PRIMARY KEY (fldFName,fldLName,fldTNr,fldEmail))");
+
+		c.setCatalog("dbContacts");
+	}
+
 
 	public void closeConnection()  throws SQLException{
+			s.close();
 			c.close();
 	}
 
 
 	 public ArrayList<Contact> readDb() throws SQLException{
+
+
+		initilizeDB();
+
 
 		ArrayList<Contact> returnContacts = new ArrayList<Contact>();
 
@@ -95,8 +107,18 @@ public class DbHandler {
 		 return returnContacts;
 	}
 
+	public boolean dropDb() throws SQLException{
+		c.setCatalog("dbContacts");
+		Statement st = c.createStatement();
+		st.executeUpdate("DROP TABLE IF EXISTS tblContactbook");
+
+		return true; //will never reach here if exceptions is thrown as above
+	}
+
 
 	public boolean addContact(Contact contact) throws ContactNotAddedException, SQLException{
+		initilizeDB();
+
 		boolean isAdded = false;
 
 		ResultSet resultSet;
@@ -140,6 +162,8 @@ public class DbHandler {
 
 
 	public boolean removeContact(Contact contact) throws ContactNotRemovedException, SQLException{
+		initilizeDB();
+
 		boolean isRemoved = false;
 
 		ResultSet resultSet;
