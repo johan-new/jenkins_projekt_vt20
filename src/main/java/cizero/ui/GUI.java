@@ -565,7 +565,9 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
     insaneMode.setText("TRYCK INTE OBS! TRYCK INTE!");
 
   }
-//Sätter tillbaks normal text på alla textkomponenter
+
+/**Sätter tillbaks normal text på alla textkomponenter**/
+
   public void normalComponents(){
     addBtn.setText("Ny kontakt");
     removeBtn.setText("Radera");
