@@ -7,8 +7,7 @@ import cizero.domain.*;
 
 /**
 * <h1>DBHandler</h1>
-* DbHandler - Handles database connectivity and translates
-* input/output / CRUD
+* DbHandler - Handles database connectivity, input/output and CRUD.
 *
 * Uses Singelton pattern to avoid several connections.
 *
@@ -28,17 +27,28 @@ public class DbHandler {
 	private Connection c;
 	private Statement s;
 
+	/**
+	 * Uses a deault password for running tests
+	 *
+	 */
 
 	private DbHandler() throws SQLException, ClassNotFoundException{
 		this("my-secret-pw");
 	}
 
+
+	/**
+	 * Constructor. Uses a default password for running tests
+	 * private due to Singelton pattern
+	 *
+	 * @param dbPassword password to database, clear text
+	 */
+	
+
 	private DbHandler(String dbPassword) throws SQLException, ClassNotFoundException{
 
 		dbURL = "localhost:3306/dbContacts?allowPublicKeyRetrieval=true&password="
 				+ dbPassword + "&useSSL=false&user=root&serverTimezone=UTC";
-
-		//MysqlP4ssw0rd!1
 
 		//establish connection
 		Class.forName("com.mysql.cj.jdbc.Driver");
@@ -48,7 +58,11 @@ public class DbHandler {
 
 	}
 
-	// Thread-safe
+	/**
+	 * Thread safe Singelton Pattern
+	 *
+	 * @param passw password to database, clear text
+	 */
 	public static synchronized DbHandler getInstance(String passw)  throws SQLException, ClassNotFoundException{
 		if (instance == null) {
 			System.out.println("NEW");
@@ -63,6 +77,11 @@ public class DbHandler {
 		return getInstance("my-secret-pw");
 	}
 
+	/**
+	 *	Ensures the ability to add/remove contacts even if the database is
+	 *	tampered with during runtime
+	 **/
+
 	public void initilizeDB() throws SQLException {
 		s = c.createStatement();
 		s.executeUpdate("CREATE DATABASE IF NOT EXISTS dbContacts");
@@ -75,12 +94,19 @@ public class DbHandler {
 	}
 
 
+	/**
+	* Closes Connection and Statement
+	*/
+
 	public void closeConnection()  throws SQLException{
 			s.close();
 			c.close();
 	}
 
 
+	/**
+	 * Returns database as an ArrayList of Contact-objects
+	 */
 	 public ArrayList<Contact> readDb() throws SQLException{
 
 
@@ -107,6 +133,10 @@ public class DbHandler {
 		 return returnContacts;
 	}
 
+	/**
+	 * Deletes table
+	*/
+
 	public boolean dropDb() throws SQLException{
 		c.setCatalog("dbContacts");
 		Statement st = c.createStatement();
@@ -115,6 +145,9 @@ public class DbHandler {
 		return true; //will never reach here if exceptions is thrown as above
 	}
 
+	/**
+	 * Adds a contact to the database
+	 */
 
 	public boolean addContact(Contact contact) throws ContactNotAddedException, SQLException{
 		initilizeDB();
@@ -160,6 +193,9 @@ public class DbHandler {
 		return areAdded;
 	}
 
+	/**
+	 * Removes a contact
+	 */
 
 	public boolean removeContact(Contact contact) throws ContactNotRemovedException, SQLException{
 		initilizeDB();

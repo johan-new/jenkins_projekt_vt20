@@ -17,6 +17,20 @@ import cizero.storage.DbHandler;
 
 class TestDbHandler {
 
+	/**
+	 * <h1>TestDbHandler</h1>
+	 *
+	 * 	Testing main functionality of DbHandler class.
+	 *
+	 * 	I prep / clean up the tests in order to achieve loose coupling,
+	 * 	instead of controlling order of execution of the tests.
+	 *
+	 * @author  Johan Nyberg
+	 * @version 1.0
+	 * @since   2019-02-05
+	 */
+
+
 	DbHandler dbh;
 
 
