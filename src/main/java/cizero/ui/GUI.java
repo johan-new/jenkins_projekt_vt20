@@ -11,6 +11,18 @@ import cizero.domain.ContactBook;
 import cizero.storage.ContactNotAddedException;
 import cizero.storage.ContactNotRemovedException;
 
+
+
+/**
+ * <h1><i>GUI</i></h1>
+ * <p>
+ * Ett grafiskt gränssnitt till kontaktboken. Kontaktens namn skrivs in i JFields och existerande
+ * kontakter visas i en JTextArea.
+ *
+ * @author Pontus Eriksson
+ *
+ */
+
 public class GUI extends JFrame {
 
   private ContactBook contactBook;
@@ -82,17 +94,24 @@ public class GUI extends JFrame {
 
     createMenuBar();
 
+//Ta bort alla kontakter
     removeAll.addActionListener(e -> {
       removeAllContacts();
     });
 
-
+//Rensa textArean ifrån all text
     clear.addActionListener(e->{
       textArea.setText("");
     });
 
+//Avsluta programmet
     avsluta.addActionListener(e->{
       System.exit(0);
+    });
+
+// Lyssnare för att sätta olika "modes"
+    darkMode.addActionListener(e -> {
+      darkMode();
     });
 
     pinkMode.addActionListener(e -> {
@@ -106,7 +125,6 @@ public class GUI extends JFrame {
     randomMode.addActionListener(e->{
       randomMode();
     });
-
 
     lightMode.addActionListener(e -> {
       defaultMode();
@@ -127,6 +145,9 @@ public class GUI extends JFrame {
 
     });
 
+
+
+  //söker efter existerande kontakter. Läser av information ifrån textFields och visar dem i textArea
     searchBtn.addActionListener(e -> {
       if(insane){
         insaneColors();
@@ -139,6 +160,7 @@ public class GUI extends JFrame {
     }
     });
 
+// lyssnare till knapp som lägger till kontakt
     addBtn.addActionListener(e -> {
       if(insane){
         insaneColors();
@@ -152,6 +174,7 @@ public class GUI extends JFrame {
     }
     });
 
+//Lyssnare till knapp som tar bort kontakt
     removeBtn.addActionListener(e -> {
       if(insane){
         String text = "";
@@ -166,6 +189,7 @@ public class GUI extends JFrame {
 
     });
 
+//Lyssnare till knapp som visar alla kontakter
     showBtn.addActionListener(e -> {
       if(insane){
         showInsaneContacts();
@@ -186,7 +210,7 @@ public class GUI extends JFrame {
 
 
 
-/**Metoder som kallas vid knapptryck:
+//Metoder som kallas vid knapptryck:
 
 /** Kallar på metoden addContact() i klassen ContactBook genom att hämta alla persondata ifrån JTextFields i Guit.
 skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
@@ -202,6 +226,8 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
       clearForm();
     }
 
+  /** Kallar på metoden removeContact() i klassen ContactBook genom att hämta alla persondata ifrån JTextFields i Guit.
+  skriver ut felmeddelande om kontakten inte finns**/
   public void removeContact(){
 
     try {
@@ -219,7 +245,7 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
 
   }
 
-
+  /** Kallar på metoden removeAllContactsContact() i klassen ContactBook vilket raderar alla kontakter**/
   public void removeAllContacts(){
     try{
     if(JOptionPane.showConfirmDialog(this, "Du kommer att radera alla dina kontakter. Fortsätt?",
@@ -233,7 +259,7 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
     }
   }
 
-
+/** Skriver ut alla befintliga kontakter i textArea**/
   public void showContacts(){
     String contactText = "";
     for(Contact contact: contacts){
@@ -244,7 +270,8 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
 
   }
 
-
+  /** Kallar på metoden findContact() i klassen ContactBook genom att hämta alla persondata ifrån JTextFields i Guit.
+  skriver ut felmeddelande om kontakten inte finns **/
   public void findContact(String firstName, String lastName, String telenr, String mail){
     tempContacts = new ArrayList<>();
     for(Contact contact : contacts){
@@ -269,7 +296,7 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
 
 
 
-/** Metod för att ta bort alla kontakter utan att behöva besvara en dialogruta
+/** Tar bort alla kontakter utan att behöva besvara en dialogruta
    skapad av test-anleningar**/
     public void removeAllContactsHidden(){
       try{
@@ -357,7 +384,7 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
 
 
   //Color modes. darkMode(), randomMode() och pinkMode() definierar fyra färger
-
+/**Ändrar utseendet till dark mode **/
   public void darkMode(){
     background1 = new Color(17,1,1);
     background2 = new Color(80, 59, 49);
@@ -376,7 +403,7 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
     setMode();
   };
 
-
+/**Ändrar utseendet till default **/
   public void defaultMode(){
     background2 = UIManager.getColor("FormPanel.background");
     background1 = UIManager.getColor("TextArea.background");
@@ -385,7 +412,7 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
     setMode();
 
   }
-
+/**Ändrar utseendet på ett kontrollerat slumpmässigt sätt **/
   public void randomMode(){
     background2 = new Color((int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100) );
     background1 = new Color((int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100));
@@ -394,7 +421,7 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
     setMode();
   }
 
-
+/**Ändrar utseendet till pink mode **/
   public void pinkMode(){
     background2 = new Color(252,102,99);
     background1 = new Color(243, 156, 107);
@@ -463,6 +490,7 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
   }
 
   //Sätter en slumpässig färg till varje enskild komponent
+  /**sätter helt slumpässiga färger till alla komponenter**/
   public void insaneColors(){
     textArea.setBackground(randomColor());
     textArea.setForeground(randomColor());
@@ -514,6 +542,8 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
     removeAll.setBackground(randomColor());
     removeAll.setForeground(randomColor());
 
+//Sätter "insane" text på alla komponenter som innehåller text
+/**Sätter "galen" text på alla komponenter som innehåller text**/
   }
   public void insaneComponents(){
     addBtn.setText("#%¤)=%()");
@@ -535,7 +565,7 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
     insaneMode.setText("TRYCK INTE OBS! TRYCK INTE!");
 
   }
-
+//Sätter tillbaks normal text på alla textkomponenter
   public void normalComponents(){
     addBtn.setText("Ny kontakt");
     removeBtn.setText("Radera");
@@ -556,6 +586,8 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
     insaneMode.setText("Insane mode");
   }
 
+  //Visar "insane" kontakter
+  /** visar "galna" påhittade kontakter**/
   public void showInsaneContacts(){
     String contactText = "";
     contactText += "==============================\n" + "Insane Insanesson\nTelenr:9999\nMail:@@@@@\n\n"+
@@ -568,6 +600,7 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
 
 
   //Sätter Layouten för alla komponenter
+  /**skapar layouten för alla komponenter**/
   public void setLayout(){
 
         formPanel.setPreferredSize(new Dimension(250, 100));
