@@ -14,12 +14,12 @@ public class TestGUI {
   private Contact contact;
 
 
-  @BeforeEach
-    public void createGuiAndCleanDatabase() throws SQLException, ClassNotFoundException{
-      gui = new GUI("my-secret-password");
-      gui.removeAllContactsHidden();
-      gui = new GUI("my-secret-password");
-    }
+  // @BeforeEach
+  //   public void createGuiAndCleanDatabase() throws SQLException, ClassNotFoundException{
+  //     gui = new GUI("my-secret-password");
+  //     gui.removeAllContactsHidden();
+  //     gui = new GUI("my-secret-password");
+  //   }
 
 
   // @Test
@@ -34,17 +34,7 @@ public class TestGUI {
   //
   // }
 
-  @Test
-  public void testIfAddContactsAddsContactToContacts(){
-    gui.getFNameField().setText("P");
-    gui.getLNameField().setText("S");
-    gui.getPhoneField().setText("2");
-    gui.getMailField().setText("p@s");
-    gui.addContact();
-    System.out.println(gui.getContacts().size());
-    assertTrue(gui.getContacts().size() == 1);
 
-  }
 
 
 
