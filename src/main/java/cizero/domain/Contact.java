@@ -83,6 +83,10 @@ public class Contact {
 	return (this.fName.equals(c.fName) && this.lName.equals(c.lName) && this.teleNr.equals(c.teleNr) && this.email.equals(c.email));  
   }
   
+  /**
+   * <h1><i>isEmpty</i></h1>
+   * @return True if all variables are empty
+   */
   public boolean isEmpty() {
 	  return fName.isEmpty() && lName.isEmpty() && teleNr.isEmpty() && email.isEmpty();
   }
