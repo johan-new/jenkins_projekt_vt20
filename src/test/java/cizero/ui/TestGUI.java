@@ -6,41 +6,48 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
 import cizero.domain.*;
 import java.util.*;
+import java.sql.SQLException;
 
 public class TestGUI {
 
   private GUI gui;
   private Contact contact;
 
-  // @Test
-  // public void testIfAddBtnAddsContactToContacts(){
-  //   gui = new GUI();
-  //   gui.getFNameField().setText("P");
-  //   gui.getLNameField().setText("S");
-  //   gui.getPhoneField().setText("2");
-  //   gui.getMailField().setText("p@s");
-  //   gui.getAddBtn().doClick();
-  //   System.out.println(gui.getContacts().size());
-  //   assertTrue(gui.getContacts().size() == 1);
-  //
-  // }
 
-  // @Test
-  // public void testIfAddBtnCreatesContactWithCorrectInformationFromTextFields(){
-  //   gui = new GUI();
-  //   contact = new Contact("Pelle", "Svanslös", "234", "pelle@gmail.com");
-  //   gui.getFNameField().setText("Pelle");
-  //   gui.getLNameField().setText("Svanslös");
-  //   gui.getPhoneField().setText("234");
-  //   gui.getMailField().setText("pelle@gmail.com");
-  //   gui.getAddBtn().doClick();
-  //   Contact contact2 = gui.getContacts().get(0);
-  //   assertEquals(contact, contact2);
-  // }
+  @BeforeEach
+    public void createGuiAndCleanDatabase() throws SQLException, ClassNotFoundException{
+      gui = new GUI("my-secret-password");
+      gui.removeAllContactsHidden();
+      gui = new GUI("my-secret-password");
+    }
+
+
+  @Test
+  public void testIfAddBtnAddsContactToContacts(){
+    gui.getFNameField().setText("P");
+    gui.getLNameField().setText("S");
+    gui.getPhoneField().setText("2");
+    gui.getMailField().setText("p@s");
+    gui.getAddBtn().doClick();
+    System.out.println(gui.getContacts().size());
+    assertTrue(gui.getContacts().size() == 1);
+
+  }
+
+  @Test
+  public void testIfAddBtnCreatesContactWithCorrectInformationFromTextFields(){
+    contact = new Contact("Pelle", "Svanslös", "234", "pelle@gmail.com");
+    gui.getFNameField().setText("Pelle");
+    gui.getLNameField().setText("Svanslös");
+    gui.getPhoneField().setText("234");
+    gui.getMailField().setText("pelle@gmail.com");
+    gui.getAddBtn().doClick();
+    Contact contact2 = gui.getContacts().get(0);
+    assertEquals(contact, contact2);
+  }
 
   @Test
   public void testSearchBtnFirstName(){
-    gui = new GUI("my-secret-password");
     gui.getFNameField().setText("Pelle");
     gui.getLNameField().setText("Svanslös");
     gui.getPhoneField().setText("234");
@@ -58,7 +65,6 @@ public class TestGUI {
 
   @Test
   public void testSearchBtnFirstNameIgnoresCase(){
-    gui = new GUI("my-secret-password");
     gui.getFNameField().setText("Pelle");
     gui.getLNameField().setText("Svanslös");
     gui.getPhoneField().setText("234");
@@ -72,6 +78,13 @@ public class TestGUI {
     assertEquals(sc.nextLine(), "Pelle Svanslös");
     sc.close();
 
+  }
+
+  @Test
+  public void testClearMenuItemClearsTextArea(){
+    gui.getTextArea().setText("text in textarea");
+    gui.getClearMenuItem().doClick();
+    assertEquals(gui.getTextArea().getText(), "");
   }
 
 
