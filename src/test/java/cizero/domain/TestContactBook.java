@@ -43,7 +43,7 @@ class TestContactBook {
 	boolean addContact() {
 		try {
 			cb.addContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
-		} catch (SQLException | ContactNotAddedException e) {
+		} catch (SQLException | ContactNotAddedException | ContactIsEmptyException e) {
 			e.printStackTrace();
 			fail("Contact could not be added.");
 		}
@@ -53,7 +53,7 @@ class TestContactBook {
 	boolean removeContact() {
 		try {
 			cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
-		} catch (ContactNotRemovedException | SQLException e) {
+		} catch (ContactNotRemovedException | SQLException | ContactIsEmptyException e) {
 			e.printStackTrace();
 			fail("Contact could not be removed");
 		}
