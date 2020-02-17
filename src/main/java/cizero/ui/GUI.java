@@ -1,31 +1,27 @@
 package cizero.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
+import java.awt.*;
+import javax.swing.*;
 
 import cizero.domain.Contact;
 import cizero.domain.ContactBook;
 import cizero.storage.ContactNotAddedException;
 import cizero.storage.ContactNotRemovedException;
+
+
+
+/**
+ * <h1><i>GUI</i></h1>
+ * <p>
+ * Ett grafiskt gränssnitt till kontaktboken. Kontaktens namn skrivs in i JFields och existerande
+ * kontakter visas i en JTextArea.
+ *
+ * @author Pontus Eriksson
+ *
+ */
 
 public class GUI extends JFrame {
 
@@ -52,30 +48,33 @@ public class GUI extends JFrame {
 
   private JPanel formPanel = new JPanel();
 
-  JMenuBar menuBar;
-  JMenu fileMenu;
-  JMenuItem darkMode;
-  JMenuItem lightMode;
-  JMenuItem pinkMode;
-  JMenuItem avsluta;
-  JMenuItem clear;
-  JMenuItem randomMode;
-
-  Color background1;
-  Color background2;
-  Color foreground1;
-  Color foreground2;
+  private JMenuBar menuBar;
+  private JMenu fileMenu;
+  private JMenu modes;
+  private JMenuItem darkMode;
+  private JMenuItem lightMode;
+  private JMenuItem pinkMode;
+  private JMenuItem avsluta;
+  private JMenuItem clear;
+  private JMenuItem randomMode;
+  private JMenuItem removeAll;
+  private JMenuItem insaneMode;
 
 
-  public GUI(String password){
+  private Color background1;
+  private Color background2;
+  private Color foreground1;
+  private Color foreground2;
 
-	 try {
+  private boolean insane = false;
+
+  /**Konstruktorn skapar en ny ContactBook och hämtar dess kontakter, skapar en JMenuBar,
+  *lägger till lyssnare till alla knappar och menyalternativ. Placerar också ut formpanel (med buttons och text fields)
+  och textpanel (som innehåller den JTextArea som kontaktinformationen visas på)**/
+
+  public GUI(String password) throws SQLException, ClassNotFoundException{
+
 		contactBook = new ContactBook(password);
-	} catch (ClassNotFoundException e2) {
-		textArea.setText("Lyckades inte upprätta koppling med databas");
-	} catch (SQLException e2) {
-		textArea.setText("Lyckades inte upprätta koppling till databas");
-	}
 
 
    try{
@@ -93,35 +92,26 @@ public class GUI extends JFrame {
     add(textPanel, BorderLayout.CENTER);
     add(formPanel, BorderLayout.WEST);
 
+    createMenuBar();
 
-    menuBar = new JMenuBar();
-    fileMenu = new JMenu("File");
-    darkMode = new JMenuItem("Dark mode");
-    lightMode = new JMenuItem("Standard mode");
-    pinkMode = new JMenuItem("Pink mode");
-    clear = new JMenuItem("Clear");
-    avsluta = new JMenuItem("Avsluta");
-    randomMode = new JMenuItem("Random mode");
-    fileMenu.add(darkMode);
-    fileMenu.add(lightMode);
-    fileMenu.add(pinkMode);
-    fileMenu.add(randomMode);
-    fileMenu.add(clear);
-    fileMenu.add(avsluta);
-    menuBar.add(fileMenu);
-
-    setJMenuBar(menuBar);
-
-    randomMode.addActionListener(e->{
-      randomMode();
+//Ta bort alla kontakter
+    removeAll.addActionListener(e -> {
+      removeAllContacts();
     });
 
+//Rensa textArean ifrån all text
     clear.addActionListener(e->{
       textArea.setText("");
     });
 
+//Avsluta programmet
     avsluta.addActionListener(e->{
       System.exit(0);
+    });
+
+// Lyssnare för att sätta olika "modes"
+    darkMode.addActionListener(e -> {
+      darkMode();
     });
 
     pinkMode.addActionListener(e -> {
@@ -132,70 +122,156 @@ public class GUI extends JFrame {
       darkMode();
     });
 
-    searchBtn.addActionListener(e -> {
-      findContact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText());
-      clearForm();
+    randomMode.addActionListener(e->{
+      randomMode();
     });
 
     lightMode.addActionListener(e -> {
       defaultMode();
     });
 
-    addBtn.addActionListener(e -> {
-          try {
-    		contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
-    	} catch (SQLException e1) {
-      //  textArea.setText("SQLException");
-    		textArea.setText("Kontakten finns redan i kontaktboken");
-    	} catch (ContactNotAddedException e1) {
-      //  textArea.setText("ContactNotAddedException");
-    		textArea.setText("Kontakten finns redan i kontaktboken");
-    	}
-        clearForm();
-      });
-
-    removeBtn.addActionListener(e -> {
-      boolean isRemoved;
-    	try {
-    		isRemoved = contactBook.removeContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
-        textArea.setText("Kontakten borttagen");
-    	} catch (ContactNotRemovedException e1) {
-        textArea.setText("Det gick inte att ta bort kontakten");
-    		isRemoved = false;
-    	} catch (SQLException e1) {
-    		isRemoved = false;
-    		textArea.setText("Det gick inte att ta bort kontakten");
-    	}
-
-      clearForm();
-    });
-
-    showBtn.addActionListener(e -> {
-      String contactText = "";
-      for(Contact contact: contacts){
-        contactText += "==============================\n" + contact.getFirstName() + " " +
-        contact.getLastName() + "\nTelenr: " + contact.getTeleNr() + "\nMail: " + contact.getEmail() + "\n\n";
-        textArea.setText(contactText);
+    insaneMode.addActionListener(e -> {
+      if(insane){
+        insane=false;
+        normalComponents();
+        defaultMode();
+        textArea.setText("");
       }
+      else {
+      insaneColors();
+      insaneComponents();
+      insane = true;
+    }
+
     });
 
+
+
+  //söker efter existerande kontakter. Läser av information ifrån textFields och visar dem i textArea
+    searchBtn.addActionListener(e -> {
+      if(insane){
+        insaneColors();
+        String text = "\n\n      Va?\n\n             Vad?\n VA VA VA???\n\n\n\n                         va? " +
+        "\n\n\nVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA??????????\n\n\n                             va?";
+        textArea.setText(text);
+      }else {
+      findContact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText());
+      clearForm();
+    }
+    });
+
+// lyssnare till knapp som lägger till kontakt
+    addBtn.addActionListener(e -> {
+      if(insane){
+        insaneColors();
+        String text = "";
+        for(int i=0; i<100; i++){
+          text += "ALL WORK AND NO PLAY MAKES JACK A DULL BOY\n";
+        }
+        textArea.setText(text);
+      }else{
+      addContact();
+    }
+    });
+
+//Lyssnare till knapp som tar bort kontakt
+    removeBtn.addActionListener(e -> {
+      if(insane){
+        String text = "";
+        insaneColors();
+        for(int i=0; i<100; i++){
+          text += "HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA HA\n";
+        }
+        textArea.setText(text);
+      }else{
+        removeContact();
+      }
+
+    });
+
+//Lyssnare till knapp som visar alla kontakter
+    showBtn.addActionListener(e -> {
+      if(insane){
+        showInsaneContacts();
+
+      }
+      else{
+      showContacts();
+    }
+    });
 
     setSize(600, 400);
     setLayout();
     setVisible(true);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-    //darkMode();
-
 
   }
 
 
-  public void clearForm(){
-    fNameField.setText(""); lNameField.setText(""); phoneField.setText(""); mailField.setText("");
+
+//Metoder som kallas vid knapptryck:
+
+/** Kallar på metoden addContact() i klassen ContactBook genom att hämta alla persondata ifrån JTextFields i Guit.
+skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
+    public void addContact(){
+      try {
+      contactBook.addContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+      textArea.setText("Kontakten tillagd");
+    } catch (SQLException e1) {
+      textArea.setText("Kontakten finns redan i kontaktboken");
+    } catch (ContactNotAddedException e1) {
+      textArea.setText("Kontakten finns redan i kontaktboken");
+    }
+      clearForm();
+    }
+
+  /** Kallar på metoden removeContact() i klassen ContactBook genom att hämta alla persondata ifrån JTextFields i Guit.
+  skriver ut felmeddelande om kontakten inte finns**/
+  public void removeContact(){
+
+    try {
+      contactBook.removeContact(new Contact(fNameField.getText(), lNameField.getText(), phoneField.getText(), mailField.getText()));
+      textArea.setText("Kontakten borttagen");
+    } catch (ContactNotRemovedException e1) {
+      textArea.setText("Det gick inte att ta bort kontakten");
+        e1.printStackTrace();
+    } catch (SQLException e1) {
+      textArea.setText("Det gick inte att ta bort kontakten");
+        e1.printStackTrace();
+    }
+
+    clearForm();
+
   }
 
+  /** Kallar på metoden removeAllContactsContact() i klassen ContactBook vilket raderar alla kontakter**/
+  public void removeAllContacts(){
+    try{
+    if(JOptionPane.showConfirmDialog(this, "Du kommer att radera alla dina kontakter. Fortsätt?",
+        "Varning!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+        contactBook.removeAllContacts();
+        textArea.setText("Kontakterna raderades");
+      }
+    }
+    catch(SQLException e){
+      textArea.setText("Problem att koppla till databasen");
+    }
+  }
 
+/** Skriver ut alla befintliga kontakter i textArea**/
+  public void showContacts(){
+    String contactText = "";
+    for(Contact contact: contacts){
+      contactText += "==============================\n" + contact.getFirstName() + " " +
+      contact.getLastName() + "\nTelenr: " + contact.getTeleNr() + "\nMail: " + contact.getEmail() + "\n\n";
+      textArea.setText(contactText);
+    }
+
+  }
+
+  /** Kallar på metoden findContact() i klassen ContactBook genom att hämta alla persondata ifrån JTextFields i Guit.
+  skriver ut felmeddelande om kontakten inte finns **/
   public void findContact(String firstName, String lastName, String telenr, String mail){
     tempContacts = new ArrayList<>();
     for(Contact contact : contacts){
@@ -218,6 +294,58 @@ public class GUI extends JFrame {
   }
 
 
+
+
+/** Tar bort alla kontakter utan att behöva besvara en dialogruta
+   skapad av test-anleningar**/
+    public void removeAllContactsHidden(){
+      try{
+          contactBook.removeAllContacts();
+      }
+      catch(SQLException e){
+        textArea.setText("Problem att koppla till databasen");
+      }
+    }
+
+
+
+  /**Sätter upp alla element som krävs för att skapa en JMenuBar och lägger till dem till JFramen**/
+
+  public void createMenuBar(){
+    menuBar = new JMenuBar();
+    fileMenu = new JMenu("File");
+    modes = new JMenu("Modes");
+    darkMode = new JMenuItem("Dark mode");
+    lightMode = new JMenuItem("Standard mode");
+    pinkMode = new JMenuItem("Pink mode");
+    randomMode = new JMenuItem("Random mode");
+    insaneMode = new JMenuItem("Insane mode");
+    clear = new JMenuItem("Clear");
+    avsluta = new JMenuItem("Avsluta");
+    removeAll = new JMenuItem("Radera alla");
+
+    fileMenu.add(modes);
+    modes.add(darkMode);
+    modes.add(randomMode);
+    modes.add(pinkMode);
+    modes.add(lightMode);
+    modes.add(insaneMode);
+    fileMenu.add(clear);
+    fileMenu.add(avsluta);
+    fileMenu.add(removeAll);
+    menuBar.add(fileMenu);
+    setJMenuBar(menuBar);
+  }
+
+
+
+  /**Hjälpmetod som kallas varje gång texArean som är kontaktfönstret skall rensas **/
+  public void clearForm(){
+    fNameField.setText(""); lNameField.setText(""); phoneField.setText(""); mailField.setText("");
+  }
+
+
+  //Getters
   public JTextArea getTextArea(){
     return textArea;
   }
@@ -250,8 +378,13 @@ public class GUI extends JFrame {
     return mailField;
   }
 
+  public JMenuItem getClearMenuItem(){
+    return clear;
+  }
 
 
+  //Color modes. darkMode(), randomMode() och pinkMode() definierar fyra färger
+/**Ändrar utseendet till dark mode **/
   public void darkMode(){
     background1 = new Color(17,1,1);
     background2 = new Color(80, 59, 49);
@@ -270,17 +403,16 @@ public class GUI extends JFrame {
     setMode();
   };
 
+/**Ändrar utseendet till default **/
+  public void defaultMode(){
+    background2 = UIManager.getColor("FormPanel.background");
+    background1 = UIManager.getColor("TextArea.background");
+    foreground1 = UIManager.getColor("TextArea.foreground");
+    foreground2 = UIManager.getColor("Label.foreground");
+    setMode();
 
-    public void defaultMode(){
-      background2 = UIManager.getColor("FormPanel.background");
-      background1 = UIManager.getColor("TextArea.background");
-      foreground1 = UIManager.getColor("TextArea.foreground");
-      foreground2 = UIManager.getColor("Label.foreground");
-
-      setMode();
-
-    }
-
+  }
+/**Ändrar utseendet på ett kontrollerat slumpmässigt sätt **/
   public void randomMode(){
     background2 = new Color((int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100) );
     background1 = new Color((int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100), (int)Math.floor(Math.random() *100));
@@ -289,7 +421,7 @@ public class GUI extends JFrame {
     setMode();
   }
 
-
+/**Ändrar utseendet till pink mode **/
   public void pinkMode(){
     background2 = new Color(252,102,99);
     background1 = new Color(243, 156, 107);
@@ -299,6 +431,7 @@ public class GUI extends JFrame {
 
   }
 
+  //här sätts färgerna på de faktiskta komponenterna
   public void setMode(){
     textArea.setBackground(background1);
     textArea.setForeground(foreground1);
@@ -343,12 +476,133 @@ public class GUI extends JFrame {
     clear.setForeground(foreground1);
     randomMode.setBackground(background1);
     randomMode.setForeground(foreground1);
+    insaneMode.setBackground(background1);
+    insaneMode.setForeground(foreground1);
+    modes.setBackground(background2);
+    modes.setForeground(foreground2);
+    removeAll.setBackground(background1);
+    removeAll.setForeground(foreground1);
+
+  }
+  //Skapar en helt slumpässig färg
+  public Color randomColor(){
+    return new Color((int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255), (int)Math.floor(Math.random() *255));
+  }
+
+  //Sätter en slumpässig färg till varje enskild komponent
+  /**sätter helt slumpässiga färger till alla komponenter**/
+  public void insaneColors(){
+    textArea.setBackground(randomColor());
+    textArea.setForeground(randomColor());
+    formPanel.setBackground(randomColor());
+    fNameLabel.setForeground(randomColor());
+    lNameLabel.setForeground(randomColor());
+    phoneLabel.setForeground(randomColor());
+    mailLabel.setForeground(randomColor());
+
+    addBtn.setBackground(randomColor());
+    searchBtn.setBackground(randomColor());
+    addBtn.setForeground(randomColor());
+    searchBtn.setForeground(randomColor());
+    removeBtn.setBackground(randomColor());
+    showBtn.setBackground(randomColor());
+    removeBtn.setForeground(randomColor());
+    showBtn.setForeground(randomColor());
+
+    fNameField.setBackground(randomColor());
+    lNameField.setBackground(randomColor());
+    phoneField.setBackground(randomColor());
+    mailField.setBackground(randomColor());
+    fNameField.setForeground(randomColor());
+    lNameField.setForeground(randomColor());
+    phoneField.setForeground(randomColor());
+    mailField.setForeground(randomColor());
+
+    menuBar.setBackground(randomColor());
+    menuBar.setForeground(randomColor());
+    fileMenu.setBackground(randomColor());
+    fileMenu.setForeground(randomColor());
+
+    darkMode.setBackground(randomColor());
+    darkMode.setForeground(randomColor());
+    lightMode.setForeground(randomColor());
+    lightMode.setBackground(randomColor());
+    pinkMode.setBackground(randomColor());
+    pinkMode.setForeground(randomColor());
+    insaneMode.setBackground(randomColor());
+    insaneMode.setForeground(randomColor());
+    avsluta.setForeground(randomColor());
+    avsluta.setBackground(randomColor());
+    clear.setBackground(randomColor());
+    clear.setForeground(randomColor());
+    randomMode.setBackground(randomColor());
+    randomMode.setForeground(randomColor());
+    modes.setBackground(randomColor());
+    modes.setForeground(randomColor());
+    removeAll.setBackground(randomColor());
+    removeAll.setForeground(randomColor());
+
+//Sätter "insane" text på alla komponenter som innehåller text
+/**Sätter "galen" text på alla komponenter som innehåller text**/
+  }
+  public void insaneComponents(){
+    addBtn.setText("#%¤)=%()");
+    removeBtn.setText("HAHHAHAHA");
+    showBtn.setText("?????????");
+    searchBtn.setText("INSANE!!!");
+    fNameLabel.setText("nManrÖf");
+    lNameLabel.setText("NmANreTfE");
+    phoneLabel.setText("remmunELET");
+    mailLabel.setText("LAiM");
+    darkMode.setText("-----");
+    lightMode.setText("-----");
+    randomMode.setText("-----");
+    modes.setText("-----");
+    removeAll.setText("-----");
+    clear.setText("-----");
+    avsluta.setText("-----");
+    pinkMode.setText("-----");
+    insaneMode.setText("TRYCK INTE OBS! TRYCK INTE!");
+
+  }
+
+/**Sätter tillbaks normal text på alla textkomponenter**/
+
+  public void normalComponents(){
+    addBtn.setText("Ny kontakt");
+    removeBtn.setText("Radera");
+    showBtn.setText("Visa all");
+    searchBtn.setText("Sök kontakt");
+    fNameLabel.setText("Förnamn");
+    lNameLabel.setText("Efternamn");
+    phoneLabel.setText("Telenummer");
+    mailLabel.setText("Mail");
+    darkMode.setText("Dark mode");
+    lightMode.setText("Standard mode");
+    randomMode.setText("Random mode");
+    modes.setText("Modes");
+    removeAll.setText("Radera alla");
+    clear.setText("Clear");
+    avsluta.setText("Avsluta");
+    pinkMode.setText("Pink mode");
+    insaneMode.setText("Insane mode");
+  }
+
+  //Visar "insane" kontakter
+  /** visar "galna" påhittade kontakter**/
+  public void showInsaneContacts(){
+    String contactText = "";
+    contactText += "==============================\n" + "Insane Insanesson\nTelenr:9999\nMail:@@@@@\n\n"+
+    "==============================\n" + "Insane In The Brain\nTelenr:SAKNAS!!!!!\nMail:insane@insane.insane\n\n";
+    textArea.setText(contactText);
 
   }
 
 
 
 
+  //Sätter Layouten för alla komponenter
+  /**skapar layouten för alla komponenter**/
   public void setLayout(){
 
         formPanel.setPreferredSize(new Dimension(250, 100));
