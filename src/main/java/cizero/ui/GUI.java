@@ -275,8 +275,8 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
   public void findContact(String firstName, String lastName, String telenr, String mail){
     tempContacts = new ArrayList<>();
     for(Contact contact : contacts){
-      if(contact.getFirstName().equalsIgnoreCase(firstName) || contact.getLastName().equalsIgnoreCase(lastName) ||
-        contact.getTeleNr().equalsIgnoreCase(telenr) || contact.getEmail().equalsIgnoreCase(mail)){
+      if((contact.getFirstName().equalsIgnoreCase(firstName) &&  !firstName.isEmpty()) || (contact.getLastName().equalsIgnoreCase(lastName) && !lastName.isEmpty()) ||
+        (contact.getTeleNr().equalsIgnoreCase(telenr) && !telenr.isEmpty() )|| (contact.getEmail().equalsIgnoreCase(mail)) && !mail.isEmpty()){
         tempContacts.add(contact);
       }
     }
