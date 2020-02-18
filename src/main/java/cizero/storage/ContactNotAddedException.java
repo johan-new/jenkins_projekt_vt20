@@ -15,7 +15,7 @@ public class ContactNotAddedException extends Exception{
 	
 	
 
-	ContactNotAddedException(String arg){
+	public ContactNotAddedException(String arg){
         System.out.println(arg);
     }
 	

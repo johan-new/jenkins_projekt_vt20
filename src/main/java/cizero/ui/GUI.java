@@ -8,6 +8,7 @@ import javax.swing.*;
 
 import cizero.domain.Contact;
 import cizero.domain.ContactBook;
+import cizero.domain.ContactIsEmptyException;
 import cizero.storage.ContactNotAddedException;
 import cizero.storage.ContactNotRemovedException;
 
@@ -222,6 +223,8 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
       textArea.setText("Kontakten finns redan i kontaktboken");
     } catch (ContactNotAddedException e1) {
       textArea.setText("Kontakten finns redan i kontaktboken");
+    } catch (ContactIsEmptyException e2) {
+      textArea.setText("Alla fält är toma!");
     }
       clearForm();
     }
@@ -239,8 +242,9 @@ skriver ut felmeddelande om kontakten redan finns och inte läggs till **/
     } catch (SQLException e1) {
       textArea.setText("Det gick inte att ta bort kontakten");
         e1.printStackTrace();
+    } catch(ContactIsEmptyException e2) {
+      textArea.setText("Alla fält är toma!");
     }
-
     clearForm();
 
   }

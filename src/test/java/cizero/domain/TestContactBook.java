@@ -3,7 +3,6 @@ package cizero.domain;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,51 +20,44 @@ class TestContactBook {
 	void reset() {
 		try {
 			cb = new ContactBook("my-secret-pw");
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
-			fail("Class could not be found.");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			fail("Class could not be found.");
+			fail("ContactBook could not get instance of DBHandler.");
 		}
+
 	}
 
 	@Test
 	void testAddContact() {
-		try {
-			try {
-				cb.addContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
-			} catch (ContactNotAddedException e) {
-				e.printStackTrace();
-				fail("Contact could not be added.");
-			}
-		} catch (SQLException e) {
-			fail("Contact could not be added.");
-		}
+		assertTrue(addContact());
+		// removes contact from database before next test
+		removeContact();
 	}
 
 	@Test
 	void testRemoveContact() {
-		try {
-			try {
-				cb.addContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
-			} catch (ContactNotAddedException e) {
-				e.printStackTrace();
-				fail("Contact could not be added.");
-			}
+		addContact();
+		assertTrue(removeContact());
+	}
 
-		} catch (SQLException e) {
-			fail("Connection");
-		}
+	boolean addContact() {
 		try {
-			assertTrue(cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com")));
-		} catch (ContactNotRemovedException e) {
-			fail("Contact could not be removed.");
+			cb.addContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
+		} catch (SQLException | ContactNotAddedException | ContactIsEmptyException e) {
 			e.printStackTrace();
-		} catch (SQLException e) {
-			fail("");
-			e.printStackTrace();
+			fail("Contact could not be added.");
 		}
+		return true;
+	}
+
+	boolean removeContact() {
+		try {
+			cb.removeContact(new Contact("Emil", "Rosén", "07300000", "emil.rosen@out.com"));
+		} catch (ContactNotRemovedException | SQLException | ContactIsEmptyException e) {
+			e.printStackTrace();
+			fail("Contact could not be removed");
+		}
+		return true;
 	}
 
 }
