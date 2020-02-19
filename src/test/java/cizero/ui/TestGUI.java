@@ -36,9 +36,6 @@ public class TestGUI {
 
 
 
-
-
-
   @Test
   public void testIfAddBtnCreatesContactWithCorrectInformationFromTextFields(){
     contact = new Contact("Pelle", "Svanslös", "234", "pelle@gmail.com");
